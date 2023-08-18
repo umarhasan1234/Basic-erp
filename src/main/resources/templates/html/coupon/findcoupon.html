@@ -52,9 +52,9 @@
 <body>
 	<div class="input-container">
 		<form id="editCouponForm" action="#" method="get">
-			 <h4>Please Inter Coupon ID </h4>
-			<input type="number" placeholder="Enter Coupon ID" name="couponId" required>
-			 <h4>Coupon Opration </h4>
+			<h4>Please Inter Coupon ID </h4>
+			<input type="text" placeholder="Enter Coupon ID" name="couponId" required>
+			<h4>Coupon Opration </h4>
 			<input type="text" id="readonlyField" th:value="${flag}" name="flag" readonly>
 			<button id="submitButton" type="submit">
 				<span th:text="${flag}"></span>
@@ -70,7 +70,7 @@
 			var flag = document.querySelector("input[name='flag']").value; // Retrieve the flag value
 
 			var actionUrl = "http://localhost:9090/edit-coupon/" + couponId + "?flag=" + flag;
-			
+
 			window.location.href = actionUrl;
 		});
 	</script>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import com.nrt.request.CouponRequest;
 import com.nrt.service.CouponService;
+import com.nrt.util.CommonUtil;
 
 //this is coupon controller all coupon releted opration in this controller
 @Controller
@@ -51,16 +52,17 @@ public class CouponController {
 
 	// this method find the data by coupon id
 	@GetMapping("/edit-coupon/{couponId}")
-	public ModelAndView editCoupon(@PathVariable("couponId") long couponId, @RequestParam("flag") String flag,
+	public ModelAndView editCoupon(@PathVariable("couponId") String couponId, @RequestParam("flag") String flag,
 			ModelAndView modelAndView) {
 		CouponRequest couponRequest = null;
 		if (flag.equals("DELETE")) {
 			modelAndView.addObject("message", "Coupon Deleted successfully!");
 			modelAndView.addObject("details", "Congratulations! Your coupon delete was successful.!");
 			modelAndView.setViewName(
-					couponService.Delete(couponId) ? "/html/coupon/response_success" : "/html/coupon/error");
+					couponService.Delete(CommonUtil.changeStringToLong(couponId)) ? "/html/coupon/response_success"
+							: "/html/coupon/error");
 		} else {
-			couponRequest = couponService.getCouponById(couponId);
+			couponRequest = couponService.getCouponById(CommonUtil.changeStringToLong(couponId));
 			modelAndView.setViewName(couponRequest != null ? "/html/coupon/coupon_update" : "/html/coupon/error");
 		}
 

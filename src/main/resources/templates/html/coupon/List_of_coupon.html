@@ -35,7 +35,8 @@
 			<th>Amount Above</th>
 			<th>Description</th>
 			<th>Apply Per User</th>
-		</tr>
+			<th>DELETE</th>
+			<th>UPDATE</th>
 		<tr th:each="coupon : ${listCoupon}">
 			<td th:text="${coupon.code}"></td>
 			<td th:text="${coupon.type}"></td>
@@ -46,6 +47,12 @@
 			<td th:text="${coupon.ifAmountAbove}"></td>
 			<td th:text="${coupon.description}"></td>
 			<td th:text="${coupon.applyPerUser}"></td>
+			<td>
+				<a th:href="@{'http://localhost:9090/edit-coupon/' + ${coupon.couponId} + '?flag=DELETE'}">Delete</a>
+			</td>
+			<td>
+				<a th:href="@{'http://localhost:9090/edit-coupon/' + ${coupon.couponId} + '?flag=UPDATE'}">Update</a>
+			</td>
 		</tr>
 	</table>
 </body>

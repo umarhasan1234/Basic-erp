@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Add User Form</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f4;
+		}
+
+		h1 {
+			text-align: center;
+			margin-top: 20px;
+		}
+
+		form {
+			background-color: #fff;
+			border-radius: 5px;
+			padding: 20px;
+			width: 300px;
+			margin: 0 auto;
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+		}
+
+		label {
+			display: block;
+			margin-bottom: 5px;
+			font-weight: bold;
+		}
+
+		input[type="text"] {
+			width: 100%;
+			padding: 8px;
+			margin-bottom: 15px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+		}
+
+		input[type="submit"] {
+			background-color: #007bff;
+			color: #fff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 3px;
+			cursor: pointer;
+		}
+
+		input[type="submit"]:hover {
+			background-color: #0056b3;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Add User</h1>
+	<form id="addUserForm">
+		<label for="requestEmail">Email:</label>
+		<input type="text" id="requestEmail" name="requestEmial" required>
+
+		<label for="requestFirstName">First Name:</label>
+		<input type="text" id="requestFirstName" name="requestFirstName" required>
+
+		<label for="requestLastName">Last Name:</label>
+		<input type="text" id="requestLastName" name="requestLastName" required>
+
+		<label for="requestPhone">Phone:</label>
+		<input type="text" id="requestPhone" name="requestPhone" required>
+
+		<label for="requestRole">Role:</label>
+		<input type="text" id="requestRole" name="requestRole" required>
+
+		<input type="submit" value="Add User">
+	</form>
+	<script>
+		document.getElementById('addUserForm').addEventListener('submit', function (event) {
+			event.preventDefault();
+
+			const formData = new FormData(this);
+
+			const requestData = {
+
+				requestFirstName: formData.get('requestFirstName'),
+				requestLastName: formData.get('requestLastName'),
+				requestPhone: formData.get('requestPhone'),
+				requestRole: formData.get('requestRole'),
+				requestEmialId: formData.get('requestEmail')
+			};
+
+			fetch('http://localhost:9090/user/adduser', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(requestData)
+			})
+				.then(response => response.json())
+				.then(data => {
+					console.log('Response:', data);
+					// You can handle the response data here
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+		});
+	</script>
+</body>
+
+</html>
