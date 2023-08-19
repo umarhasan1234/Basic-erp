@@ -32,7 +32,7 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain1(HttpSecurity http) throws Exception {
 
-		final String PUBLIC_URL[] = { "/**"};
+		final String PUBLIC_URL[] = { "/login/**","/user/**"};
 		http.csrf(csrf -> csrf.disable());
 		http.authorizeHttpRequests(
 				(requests) -> requests.requestMatchers(PUBLIC_URL).permitAll().anyRequest().authenticated());

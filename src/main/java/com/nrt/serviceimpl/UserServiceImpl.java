@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -112,4 +116,21 @@ public class UserServiceImpl implements UserService {
 		return new ResponseEntity<User>(user.get(), HttpStatus.OK);
 	}
 
+	@Override
+	public UserRequest getUserByEmail() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserRequest userRequest = new UserRequest();
+		if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			Optional<User> userOption = userRepository.findByEmail(userDetails.getUsername());
+
+			if (userOption.isPresent())
+			userRequest.setRequestEmialId(userOption.get().getEmail());
+			userRequest.setRequestFirstName(userOption.get().getFirstName());
+			userRequest.setRequestLastName(userOption.get().getLastName());
+			userRequest.setRequestPhone(userOption.get().getPhoneNo());
+			userRequest.setRequestRole(userOption.get().getRole().getRole());
+		}
+		return userRequest;
+	}
 }

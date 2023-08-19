@@ -13,6 +13,9 @@ import com.nrt.request.LoginRequest;
 import com.nrt.responce.LoginResponce;
 import com.nrt.service.UserService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
 @RestController
 public class LoginController {
 
@@ -20,8 +23,18 @@ public class LoginController {
 	private UserService userService;
 
 	@RequestMapping(value = "/login/jwt", method = RequestMethod.POST)
-	public ResponseEntity<LoginResponce> userLogin(@RequestBody LoginRequest loginRequest) {
-		return userService.generateToken(loginRequest);
+	public ResponseEntity<LoginResponce> userLogin(@RequestBody LoginRequest loginRequest,
+			HttpServletResponse response) {
+		ResponseEntity<LoginResponce> loginResponseEntity = userService.generateToken(loginRequest);
+		LoginResponce loginResponse = loginResponseEntity.getBody();
+		if (loginResponse != null) {
+			Cookie tokenCookie = new Cookie("jwtToken", loginResponse.getUserToken());
+			tokenCookie.setMaxAge(24 * 60 * 60);
+			tokenCookie.setPath("/");
+			response.addCookie(tokenCookie);
+		}
+
+		return loginResponseEntity;
 	}
 
 	@GetMapping("/login")

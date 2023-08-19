@@ -61,6 +61,12 @@
 		}
 	</style>
 	<meta name="description" content="" />
+
+
+	<div id="apiResponse"></div>
+	<script>
+		console.log(localStorage.getItem('userToken'));
+	</script>
 </head>
 
 <body>
@@ -68,7 +74,7 @@
 		<div class="authentication-inner row">
 			<div class="d-flex col-lg-8 align-items-center justify-content-center p-sm-5 p-3">
 
-				<form id="couponForm" method="post">
+				<form id="couponForm" method="post" action="http://localhost:9090/coupon/register">
 					<h2>Coupon Registration</h2>
 					<label for="couponCode">Coupon Code:</label>
 					<input type="text" id="couponCode" name="couponCode" required>
@@ -97,10 +103,7 @@
 					<label for="couponAmount">Coupon Apply Per User :</label>
 					<input type="number" id="couponAmount" name="couponApplyPerUser" required>
 
-					<input type="submit" value="Register Coupon">
-					<p>Click <a href="http://localhost:9090/page/UPDATE">here</a> to update coupon.</p>
-					<p>Click <a href=" http://localhost:9090/page/DELETE">here</a> to delete coupon.</p>
-					<p>Click <a href="http://localhost:9090/list">here</a> find List of coupon.</p>
+					<input type="submit" value="Register Coupon">	
 				</form>
 
 

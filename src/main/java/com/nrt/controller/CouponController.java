@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import com.nrt.request.CouponRequest;
@@ -14,13 +15,14 @@ import com.nrt.util.CommonUtil;
 
 //this is coupon controller all coupon releted opration in this controller
 @Controller
+@RequestMapping("/coupon")
 public class CouponController {
 
 	@Autowired
 	private CouponService couponService;
 
 	// this methos redirect coupon register page
-	@GetMapping("/")
+	@GetMapping("/register/page")
 	public ModelAndView CouponHomePage(ModelAndView modelAndView) {
 		modelAndView.setViewName("/html/coupon/coupon_register");
 		return modelAndView;
@@ -40,16 +42,6 @@ public class CouponController {
 		return modelAndView;
 
 	}
-
-	// this method redirect coupon update page
-	@GetMapping("/page/{flag}")
-	public ModelAndView CouponUpdatePage(@PathVariable String flag, ModelAndView modelAndView) {
-		modelAndView.addObject("flag", flag);
-		modelAndView.setViewName("/html/coupon/findcoupon");
-		return modelAndView;
-
-	}
-
 	// this method find the data by coupon id
 	@GetMapping("/edit-coupon/{couponId}")
 	public ModelAndView editCoupon(@PathVariable("couponId") String couponId, @RequestParam("flag") String flag,

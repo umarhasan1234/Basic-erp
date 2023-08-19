@@ -63,71 +63,14 @@
 
 	<meta name="description" content="" />
 
-	<!-- Favicon -->
-	<link rel="icon" type="image/x-icon" href="../../assets/img/favicon/favicon.ico" />
-
-	<!-- Fonts -->
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-		rel="stylesheet" />
-
-	<!-- Icons -->
-	<link rel="stylesheet" href="../../assets/vendor/fonts/fontawesome.css" />
-	<link rel="stylesheet" href="../../assets/vendor/fonts/tabler-icons.css" />
-	<link rel="stylesheet" href="../../assets/vendor/fonts/flag-icons.css" />
-
-	<!-- Core CSS -->
-	<link rel="stylesheet" href="../../assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
-	<link rel="stylesheet" href="../../assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" />
-	<link rel="stylesheet" href="../../assets/css/demo.css" />
-
-	<!-- Vendors CSS -->
-	<link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
-	<link rel="stylesheet" href="../../assets/vendor/libs/node-waves/node-waves.css" />
-	<link rel="stylesheet" href="../../assets/vendor/libs/typeahead-js/typeahead.css" />
-	<!-- Vendor -->
-	<link rel="stylesheet" href="../../assets/vendor/libs/bs-stepper/bs-stepper.css" />
-	<link rel="stylesheet" href="../../assets/vendor/libs/bootstrap-select/bootstrap-select.css" />
-	<link rel="stylesheet" href="../../assets/vendor/libs/select2/select2.css" />
-	<link rel="stylesheet" href="../../assets/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
-
-	<!-- Page CSS -->
-
-	<!-- Page -->
-	<link rel="stylesheet" href="../../assets/vendor/css/pages/page-auth.css" />
-	<!-- Helpers -->
-	<script src="../../assets/vendor/js/helpers.js"></script>
-
-	<!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-	<!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
-	<script src="../../assets/vendor/js/template-customizer.js"></script>
-	<!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-	<script src="../../assets/js/config.js"></script>
+	
 </head>
 
 <body>
-	<!-- Content -->
-
-	<div class="authentication-wrapper authentication-cover authentication-bg">
-		<div class="authentication-inner row">
-			<!-- Left Text -->
-			<div
-				class="d-none d-lg-flex col-lg-4 align-items-center justify-content-center p-5 auth-cover-bg-color position-relative auth-multisteps-bg-height">
-				<img src="../../assets/img/illustrations/auth-register-multisteps-illustration.png"
-					alt="auth-register-multisteps" class="img-fluid" width="280" />
-
-				<img src="../../assets/img/illustrations/bg-shape-image-light.png" alt="auth-register-multisteps"
-					class="platform-bg" data-app-light-img="illustrations/bg-shape-image-light.png"
-					data-app-dark-img="illustrations/bg-shape-image-dark.png" />
-			</div>
-			<!-- /Left Text -->
-
-			<!--  Multi Steps Registration -->
+	
 			<div class="d-flex col-lg-8 align-items-center justify-content-center p-sm-5 p-3">
 
-				<form id="couponForm" action="http://localhost:9090/update" method="post">
+				<form id="couponForm" action="http://localhost:9090/coupon/update" method="post">
 					<h2>Coupon Update</h2>
 
 					<label for="couponId">Coupon ID:</label>
@@ -167,7 +110,7 @@
 						th:value="${coupon.couponApplyPerUser}" required>
 
 					<input type="submit" value="Update Coupon">
-					<p>Click <a href="http://localhost:9090/">here</a> to create a coupon.</p>
+					<p>Click <a href="http://localhost:9090/coupon/list">here</a> to Home.</p>
 				</form>
 
 
@@ -176,43 +119,7 @@
 
 		</div>
 	</div>
-
-	<script>
-		// Check selected custom option
-		window.Helpers.initCustomOptionCheck();
-	</script>
-
-	<!-- / Content -->
-
-	<!-- Core JS -->
-	<!-- build:js assets/vendor/js/core.js -->
-	<script src="../../assets/vendor/libs/jquery/jquery.js"></script>
-	<script src="../../assets/vendor/libs/popper/popper.js"></script>
-	<script src="../../assets/vendor/js/bootstrap.js"></script>
-	<script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-	<script src="../../assets/vendor/libs/node-waves/node-waves.js"></script>
-
-	<script src="../../assets/vendor/libs/hammer/hammer.js"></script>
-	<script src="../../assets/vendor/libs/i18n/i18n.js"></script>
-	<script src="../../assets/vendor/libs/typeahead-js/typeahead.js"></script>
-
-	<script src="../../assets/vendor/js/menu.js"></script>
-	<!-- endbuild -->
-
-	<!-- Vendors JS -->
-	<script src="../../assets/vendor/libs/cleavejs/cleave.js"></script>
-	<script src="../../assets/vendor/libs/cleavejs/cleave-phone.js"></script>
-	<script src="../../assets/vendor/libs/bs-stepper/bs-stepper.js"></script>
-	<script src="../../assets/vendor/libs/select2/select2.js"></script>
-	<script src="../../assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
-	<script src="../../assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
-	<script src="../../assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
-
-	<!-- Main JS -->
-	<script src="../../assets/js/main.js"></script>
-
-	<!-- Page JS -->
-	<script src="../../assets/js/pages-auth-multisteps.js"></script>
+	
 </body>
 
 </html>

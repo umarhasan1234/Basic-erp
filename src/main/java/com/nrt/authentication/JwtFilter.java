@@ -1,4 +1,5 @@
 package com.nrt.authentication;
+
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -25,19 +27,30 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Autowired
 	private CustomUserService customUserDetailsService;
 
+	private static final String JWT_COOKIE_NAME = "jwtToken";
+
 	private final Logger log = LoggerFactory.getLogger(JwtFilter.class);
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
-		String requestTokenHeader = request.getHeader("Authorization");
-
-		String userName = null;
 
 		String jwtToken = null;
 
-		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer")) {
-			jwtToken = requestTokenHeader.substring(7);
+		Cookie[] cookies = request.getCookies();
+		// String requestTokenHeader = request.getHeader("Authorization");
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals(JWT_COOKIE_NAME)) {
+					jwtToken = cookie.getValue();
+					break;
+				}
+			}
+		}
+		String userName = null;
+//		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer")) {
+//			jwtToken = requestTokenHeader.substring(7);
+		if (jwtToken != null) {
 			try {
 				userName = this.jwtUtil.getUsernameFromToken(jwtToken);
 			} catch (ExpiredJwtException e1) {
