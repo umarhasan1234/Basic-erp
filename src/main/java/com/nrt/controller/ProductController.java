@@ -1,5 +1,6 @@
 package com.nrt.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -11,9 +12,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.nrt.entity.Product;
+import com.nrt.repository.ProductRepository;
 import com.nrt.service.ProductService;
 
 @Controller
@@ -21,6 +24,9 @@ public class ProductController {
 
 	@Autowired
 	private ProductService productImpl;
+	
+	@Autowired
+	private ProductRepository productRepository;
 
 	// this method redirect product page
 	@RequestMapping("/product")
@@ -31,14 +37,36 @@ public class ProductController {
 
 	// this method add product
 	@RequestMapping("/saveProduct")
-	public ModelAndView addProduct(@ModelAttribute("product") Product product, ModelAndView modelAndView) {
-		productImpl.saveAllProduct(product);
-		modelAndView.addObject("title", "Save Product");
-		modelAndView.addObject("message", "Successfull");
-		modelAndView.addObject("details", "\"Congratulations! Use save Product successfully !");
-		modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
-		modelAndView.setViewName("/html/product/response_message"); 
-		return modelAndView;
+	public ModelAndView addProduct(@ModelAttribute("product") Product product, @RequestParam("file") MultipartFile file,ModelAndView modelAndView) {
+		
+		
+		
+		
+		
+		 if (productRepository.existsById(product.getId())) {
+	        	//modelAndView.addAttribute("errorMessage", "Product with ID " + product.getId() + " already exists.");
+	        	
+	        	modelAndView.addObject("title", "Save Product");
+	    		modelAndView.addObject("message", "Successfull");
+	    		modelAndView.addObject("details", "\"Congratulations! Use save Product successfully !");
+	    		modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
+	    		modelAndView.setViewName("/html/product/error_message");
+	            return modelAndView; // Return the name of the Thymeleaf template for displaying the error
+	        }
+		 
+		 if (!file.isEmpty()) {
+	            try {
+	                product.setImage(file.getBytes());
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+		 productRepository.save(product);
+	        modelAndView.addObject("title", "Save Product");
+ 		modelAndView.addObject("message", "Successfull");
+ 		modelAndView.addObject("details", "\"Congratulations! ADD Product successfully !");
+ 		modelAndView.setViewName("/html/product/respinse_message");
+         return modelAndView;
 	}
 
 	// this method find all product
@@ -93,4 +121,6 @@ public class ProductController {
 		return modelAndView;
 	     
 	}
+	
+
 }

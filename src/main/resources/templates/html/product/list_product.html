@@ -1,12 +1,59 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>List of Products</title>
-</head>
-<body>
 
-<h1>List of Products</h1>
-<table border>
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+	<title>Product List</title>
+	<style>
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			padding: 8px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+
+		th {
+			background-color: #f2f2f2;
+		}
+	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">BASIC-ERP</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li><a href="http://localhost:9090/coupon/register/page">Create-Coupon</a></li>
+			</ul>
+			
+			<ul class="nav navbar-nav">
+				<li><a href="http://localhost:9090/product">Add-Product</a></li>
+			</ul>
+			<ul class="nav navbar-nav">
+				<li><a href="/listProduct">Product-List</a></li>
+			</ul>
+			
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="http://localhost:9090/profile"><span class="glyphicon glyphicon-user"></span>Profile</a></li>
+				<li><a href="http://localhost:9090/logout"><span class="glyphicon glyphicon-log-in">Logout</span></a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<h2>Product List</h2>
+	<table>
 		<tr>
 			<th>Product Id</th>
 			<th>Product Description</th>
@@ -31,10 +78,10 @@
 		<td><a th:href="@{/updateById/(id=${product.id})}">update</a></td>
         <td><a th:href="@{/delete/(id=${product.id})}">delete</a></td>
     </tr>
-</table>
-  </br>
-    <a href="/product">Add Product</a></br>
+	</table>
+	
+	</br>
 </body>
-</html>
 
+</html>
 

@@ -1,10 +1,13 @@
 package com.nrt.entity;
 
+import java.util.Arrays;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,13 +40,19 @@ public class Product {
 	
 	@Column(name="Quantity")
     private int quantity;
+	
+	@Lob
+    @Column(name = "product_image", columnDefinition = "BLOB")
+    private byte[] image;
 
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", purchasePrice="
 				+ purchasePrice + ", maxRetailPrice=" + maxRetailPrice + ", sellingPrice=" + sellingPrice
-				+ ", quantity=" + quantity + "]";
+				+ ", quantity=" + quantity + ", image=" + Arrays.toString(image) + "]";
 	}
+
+	
 
 
 
