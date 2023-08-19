@@ -12,7 +12,7 @@ public interface UserService {
 
 	public ResponseEntity<User> getUserById(long userId);
 
-	public ResponseEntity<User> updatePassword(long userId, String oldPassword, String newPassword);
+	public ResponseEntity<User> updatePassword(String userId, String oldPassword, String newPassword);
 
 	public ResponseEntity<LoginResponce> generateToken(LoginRequest loginRequest);
 	
