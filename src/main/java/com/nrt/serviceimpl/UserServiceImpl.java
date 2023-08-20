@@ -103,17 +103,23 @@ public class UserServiceImpl implements UserService {
 		return new ResponseEntity<User>(user.get(), HttpStatus.OK);
 	}
 
-	public ResponseEntity<User> updatePassword(long userId, String oldPassword, String newPassword) {
+	public ResponseEntity<User> updatePassword(String userId, String oldPassword, String newPassword) {
 
-		Optional<User> user = userRepository.findById(userId);
-		String currentPassword = user.get().getPassword();
-		if (passwordEncoder.matches(oldPassword, currentPassword)) {
-			user.get().setPassword(passwordEncoder.encode(newPassword));
+		Optional<User> optionalUser = userRepository.findByEmail(userId);
+		if (optionalUser.isPresent()) {
+			User user = optionalUser.get();
+			String currentPassword = user.getPassword();
 
-			userRepository.save(user.get());
+			if (passwordEncoder.matches(oldPassword, currentPassword)) {
+				user.setPassword(passwordEncoder.encode(newPassword));
+				userRepository.save(user);
+				return new ResponseEntity<>(user, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(user, HttpStatus.UNAUTHORIZED);
+			}
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-
-		return new ResponseEntity<User>(user.get(), HttpStatus.OK);
 	}
 
 	@Override
@@ -125,7 +131,7 @@ public class UserServiceImpl implements UserService {
 			Optional<User> userOption = userRepository.findByEmail(userDetails.getUsername());
 
 			if (userOption.isPresent())
-			userRequest.setRequestEmialId(userOption.get().getEmail());
+				userRequest.setRequestEmialId(userOption.get().getEmail());
 			userRequest.setRequestFirstName(userOption.get().getFirstName());
 			userRequest.setRequestLastName(userOption.get().getLastName());
 			userRequest.setRequestPhone(userOption.get().getPhoneNo());
