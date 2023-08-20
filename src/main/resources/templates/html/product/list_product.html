@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-	<title>Coupon List</title>
+	<title>Product List</title>
 	<style>
 		table {
 			width: 100%;
@@ -35,9 +37,14 @@
 			<ul class="nav navbar-nav">
 				<li><a href="http://localhost:9090/coupon/register/page">Create-Coupon</a></li>
 			</ul>
+			
 			<ul class="nav navbar-nav">
-				<li><a href="http://localhost:9090/product">Create-Product</a></li>
+				<li><a href="http://localhost:9090/product">Add-Product</a></li>
 			</ul>
+			<ul class="nav navbar-nav">
+				<li><a href="/listProduct">Product-List</a></li>
+			</ul>
+			
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="http://localhost:9090/profile"><span class="glyphicon glyphicon-user"></span>Profile</a></li>
 				<li><a href="http://localhost:9090/logout"><span class="glyphicon glyphicon-log-in">Logout</span></a>
@@ -45,40 +52,36 @@
 			</ul>
 		</div>
 	</nav>
-	<h2>Coupon List</h2>
+	<h2>Product List</h2>
 	<table>
 		<tr>
-			<th>Coupon Code</th>
-			<th>Type</th>
-			<th>Amount</th>
-			<th>Created At</th>
-			<th>Expires At</th>
-			<th>Active At</th>
-			<th>Amount Above</th>
-			<th>Description</th>
-			<th>Apply Per User</th>
-			<th>DELETE</th>
-			<th>UPDATE</th>
-		<tr th:each="coupon : ${listCoupon}">
-			<td th:text="${coupon.code}"></td>
-			<td th:text="${coupon.type}"></td>
-			<td th:text="${coupon.amount}"></td>
-			<td th:text="${coupon.createdAt}"></td>
-			<td th:text="${coupon.expiresAt}"></td>
-			<td th:text="${coupon.activetAt}"></td>
-			<td th:text="${coupon.ifAmountAbove}"></td>
-			<td th:text="${coupon.description}"></td>
-			<td th:text="${coupon.applyPerUser}"></td>
-			<td>
-				<a
-					th:href="@{'http://localhost:9090/coupon/edit-coupon/' + ${coupon.couponId} + '?flag=DELETE'}">Delete</a>
-			</td>
-			<td>
-				<a
-					th:href="@{'http://localhost:9090/coupon/edit-coupon/' + ${coupon.couponId} + '?flag=UPDATE'}">Update</a>
-			</td>
+			<th>Product Id</th>
+			<th>Product Description</th>
+			<th>Product Name</th>
+			<th>Purchase Price</th>
+			<th>Max Retail Price</th>
+			<th>Selling Pricee</th>
+			<th>Quantity</th>
+			<th>Update Product</th>
+			<th>Delete Product</th>
 		</tr>
+    
+  
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.description}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.purchasePrice}"></td>
+        <td th:text="${product.maxRetailPrice}"></td>
+        <td th:text="${product.sellingPrice}"></td>
+        <td th:text="${product.quantity}"></td>
+		<td><a th:href="@{/updateById/(id=${product.id})}">update</a></td>
+        <td><a th:href="@{/delete/(id=${product.id})}">delete</a></td>
+    </tr>
 	</table>
+	
+	</br>
 </body>
 
 </html>
+
