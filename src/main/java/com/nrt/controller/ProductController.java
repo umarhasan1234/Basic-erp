@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.nrt.entity.Product;
 import com.nrt.repository.ProductRepository;
+import com.nrt.request.ProductRequest;
 import com.nrt.service.ProductService;
 
 @Controller
@@ -35,8 +36,18 @@ public class ProductController {
 
 	// this method Add product
 	 @RequestMapping("/saveProduct")
-	    public ModelAndView addProduct(@ModelAttribute("product") Product product, @RequestParam("file") MultipartFile file,
+	    public ModelAndView addProduct(@ModelAttribute("productRequest") ProductRequest productRequest, @RequestParam("file") MultipartFile file,
 	            ModelAndView modelAndView) {
+		 
+		 Product product=new Product();
+		 product.setId(productRequest.getId());
+		 product.setDescription(productRequest.getDescription());
+		 product.setName(productRequest.getName());
+		 product.setMaxRetailPrice(productRequest.getMaxRetailPrice());
+		 product.setPurchasePrice(productRequest.getPurchasePrice());
+		 product.setSellingPrice(productRequest.getSellingPrice());
+		 product.setQuantity(productRequest.getQuantity());
+		 product.setImagePath(productRequest.getImagePath());
 	        boolean b = productService.saveProduct(product, file);//call sevice layer saveProduct method
 	        if (!b) {
 	            modelAndView.addObject("errorMessage", "Product with ID " + product.getId() + " already exists.");
