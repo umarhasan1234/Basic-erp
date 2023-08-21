@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.nrt.Email.EmailSender;
 import com.nrt.authentication.CustomUserDetails;
 import com.nrt.authentication.CustomUserService;
 import com.nrt.authentication.JwtUtil;
@@ -48,6 +50,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
+	@Autowired
+	private EmailSender emailSender;
+
 	private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	public ResponseEntity<User> saveData(UserRequest userRequest) {
@@ -68,6 +73,8 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(hashedPassword);
 			System.out.println(generateRandomPassword);
 			user = userRepository.save(user);
+			emailSender.sendWelcomeEmail(user.getEmail(), user.getEmail(), user.getRole().getRole(),
+					generateRandomPassword, "Registration Successfully Done..!");
 		} catch (Exception e) {
 			log.info("error inside the user register method");
 			log.error(e.getLocalizedMessage());
