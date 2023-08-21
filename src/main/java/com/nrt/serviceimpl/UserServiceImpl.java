@@ -66,7 +66,6 @@ public class UserServiceImpl implements UserService {
 			user.setStatus(0);
 			user.setCreatedAt(date);
 			user.setUpdatedAt(date);
-			user.setPasswordUpdated(date);
 			user.setRole(new Role("ROLE_" + userRequest.getRequestRole().toUpperCase()));
 			String generateRandomPassword = RandomPasswordGeneratorWithPattern.generateRandomPassword();
 			String hashedPassword = passwordEncoder.encode(generateRandomPassword);
@@ -103,7 +102,8 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ResponseEntity.ok(new LoginResponce(token, userOptional.get().getRole().getRole()));
+		return ResponseEntity.ok(new LoginResponce(token, userOptional.get().getRole().getRole(),
+				userOptional.get().getPasswordUpdated()));
 	}
 
 	public ResponseEntity<User> getUserById(long id) {
@@ -113,6 +113,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public ResponseEntity<User> updatePassword(String oldPassword, String newPassword) {
+		Date date = Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
 		Optional<User> optionalUser = null;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
@@ -124,6 +125,7 @@ public class UserServiceImpl implements UserService {
 			String currentPassword = user.getPassword();
 
 			if (passwordEncoder.matches(oldPassword, currentPassword)) {
+				user.setPasswordUpdated(date);
 				user.setPassword(passwordEncoder.encode(newPassword));
 				userRepository.save(user);
 				return new ResponseEntity<>(user, HttpStatus.OK);

@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
@@ -35,18 +33,12 @@
 				<a class="navbar-brand" href="#">BASIC-ERP</a>
 			</div>
 			<ul class="nav navbar-nav">
-				<li><a href="http://localhost:9090/coupon/register/page">Create-Coupon</a></li>
-			</ul>
-			
-			<ul class="nav navbar-nav">
 				<li><a href="http://localhost:9090/product">Add-Product</a></li>
+				<li><a href="/catagory">Select Catagory</a></li>
 			</ul>
-			<ul class="nav navbar-nav">
-				<li><a href="/listProduct">Product-List</a></li>
-			</ul>
-			
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="http://localhost:9090/profile"><span class="glyphicon glyphicon-user"></span>Profile</a></li>
+				<li><a href="http://localhost:9090/profile"><span class="glyphicon glyphicon-user"></span>Profile</a>
+				</li>
 				<li><a href="http://localhost:9090/logout"><span class="glyphicon glyphicon-log-in">Logout</span></a>
 				</li>
 			</ul>
@@ -65,23 +57,22 @@
 			<th>Update Product</th>
 			<th>Delete Product</th>
 		</tr>
-    
-  
-    <tr th:each="product : ${products}">
-        <td th:text="${product.id}"></td>
-        <td th:text="${product.description}"></td>
-        <td th:text="${product.name}"></td>
-        <td th:text="${product.purchasePrice}"></td>
-        <td th:text="${product.maxRetailPrice}"></td>
-        <td th:text="${product.sellingPrice}"></td>
-        <td th:text="${product.quantity}"></td>
-		<td><a th:href="@{/updateById/(id=${product.id})}">update</a></td>
-        <td><a th:href="@{/delete/(id=${product.id})}">delete</a></td>
-    </tr>
+
+
+		<tr th:each="product : ${products}">
+			<td th:text="${product.id}"></td>
+			<td th:text="${product.description}"></td>
+			<td th:text="${product.name}"></td>
+			<td th:text="${product.purchasePrice}"></td>
+			<td th:text="${product.maxRetailPrice}"></td>
+			<td th:text="${product.sellingPrice}"></td>
+			<td th:text="${product.quantity}"></td>
+			<td><a th:href="@{/updateById/(id=${product.id})}">update</a></td>
+			<td><a th:href="@{/delete/(id=${product.id})}">delete</a></td>
+		</tr>
 	</table>
-	
+
 	</br>
 </body>
 
 </html>
-

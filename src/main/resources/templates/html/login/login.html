@@ -108,16 +108,28 @@
 						localStorage.setItem('userToken', data.userToken);
 						console.log("User token:", data.userToken);
 						console.log("User role:", data.userRole);
+						console.log("User Login:", data.userLogin);
 						const headers = {
 							Authorization: "Bearer " + data.userToken
 						};
-						axios.get("http://localhost:9090/coupon/list", {headers, responseType: 'text'})
-							.then(response => {
-								if (response.status === 200) {
-									const redirectUrl = "http://localhost:9090/coupon/list";
-									window.location.href = redirectUrl;
-								}
-							})
+						if (data.userLogin === null) {
+							axios.get("//localhost:9090/password/update", {headers, responseType: 'text'})
+								.then(response => {
+									if (response.status === 200) {
+										const redirectUrl = "//localhost:9090/password/update";
+										window.location.href = redirectUrl;
+									}
+								})
+						} else {
+							axios.get("//localhost:9090/index/page", {headers, responseType: 'text'})
+								.then(response => {
+									if (response.status === 200) {
+										const redirectUrl = "//localhost:9090/index/page";
+										window.location.href = redirectUrl;
+									}
+								})
+						}
+
 
 
 					} else {
