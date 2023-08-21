@@ -42,18 +42,10 @@ public class ProductController {
 	    public ModelAndView addProduct(@ModelAttribute("productRequest") ProductRequest productRequest, @RequestParam("file") MultipartFile file,
 	            ModelAndView modelAndView) {
 		 
-		 Product product=new Product();
-		 product.setId(productRequest.getId());
-		 product.setDescription(productRequest.getDescription());
-		 product.setName(productRequest.getName());
-		 product.setMaxRetailPrice(productRequest.getMaxRetailPrice());
-		 product.setPurchasePrice(productRequest.getPurchasePrice());
-		 product.setSellingPrice(productRequest.getSellingPrice());
-		 product.setQuantity(productRequest.getQuantity());
-		 product.setImagePath(productRequest.getImagePath());
-	        boolean b = productService.saveProduct(product, file);//call sevice layer saveProduct method
+		 
+	        boolean b = productService.saveProduct(productRequest, file);//call sevice layer saveProduct method
 	        if (!b) {
-	            modelAndView.addObject("errorMessage", "Product with ID " + product.getId() + " already exists.");
+	            modelAndView.addObject("errorMessage", "Product is already exists.");
 	            modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
 	            modelAndView.setViewName("/html/product/error_message");
 	        } else {

@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.nrt.entity.Product;
 import com.nrt.repository.ProductRepository;
+import com.nrt.request.ProductRequest;
 import com.nrt.service.ProductService;
 
 @Service
@@ -56,7 +57,16 @@ public class ProductServiceImpl implements ProductService{
 	    }
 
 	 @Override
-	    public boolean saveProduct(Product product, MultipartFile file) {
+	    public boolean saveProduct(ProductRequest productRequest, MultipartFile file) {
+		 Product product=new Product();
+		 product.setId(productRequest.getId());
+		 product.setDescription(productRequest.getDescription());
+		 product.setName(productRequest.getName());
+		 product.setMaxRetailPrice(productRequest.getMaxRetailPrice());
+		 product.setPurchasePrice(productRequest.getPurchasePrice());
+		 product.setSellingPrice(productRequest.getSellingPrice());
+		 product.setQuantity(productRequest.getQuantity());
+		 product.setImagePath(productRequest.getImagePath());
 	        if (productRepository.existsById(product.getId())) {
 	            return false;
 	        } else {
