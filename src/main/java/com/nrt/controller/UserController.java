@@ -69,4 +69,10 @@ public class UserController {
 		return modelAndView;
 	}
 
+	@GetMapping("/index/page")
+	public ModelAndView Index(ModelAndView modelAndView) {
+		modelAndView.setViewName("/html/index");
+		return modelAndView;
+
+	}
 }
