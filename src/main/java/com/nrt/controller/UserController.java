@@ -1,6 +1,8 @@
 package com.nrt.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,7 @@ import com.nrt.request.UserRequest;
 import com.nrt.service.UserService;
 
 @Controller
-public class UserControllerUi {
+public class UserController {
 	@Autowired
 	private UserService userService;
 
@@ -48,18 +50,22 @@ public class UserControllerUi {
 
 	@PostMapping("/password/update")
 	public ModelAndView PasswordVerify(@ModelAttribute UpdateRequest updateRequest, ModelAndView modelAndView) {
-		ResponseEntity<User> updatePassword = userService.updatePassword(updateRequest.getUserId(), updateRequest.getOldPassword(), updateRequest.getNewPassword());
-        System.out.println(updatePassword.getStatusCode());
-		if(updatePassword.getStatusCode().equals(200))
-        {
-        	System.out.println("rung successa");
-		modelAndView.setViewName("redirect:/login");
-        }
-        else
-        {
-        	System.out.println("rung error");
-        	modelAndView.setViewName("redirect:/login");
-        }
+		ResponseEntity<User> updatePassword = userService.updatePassword(updateRequest.getOldPassword(),
+				updateRequest.getNewPassword());
+		if (updatePassword.getStatusCode().equals(HttpStatus.OK)) {
+			modelAndView.addObject("title", "Successful password updated");
+			modelAndView.addObject("message", "Password Updated Successfully..");
+			modelAndView.addObject("url", "http://localhost:9090/profile");
+			modelAndView.addObject("button", "to Profile");
+			modelAndView.addObject("details", "\"Congratulations! Your Password Updated Successfully..");
+			modelAndView.setViewName("/html/coupon/response_success");
+		} else {
+			modelAndView.addObject("title", "Faild to update password ");
+			modelAndView.addObject("url", "http://localhost:9090/profile");
+			modelAndView.addObject("button", "to Profile");
+			modelAndView.addObject("error", "Please try again Faild to password update");
+			modelAndView.setViewName("/html/coupon/error");
+		}
 		return modelAndView;
 	}
 

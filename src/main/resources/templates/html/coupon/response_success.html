@@ -48,8 +48,7 @@
 					<div class="app-brand justify-content-center mb-4 mt-2">
 						<a href="index.html" class="app-brand-link gap-2">
 							<span class="app-brand-logo demo">
-								<svg width="32" height="22" viewBox="0 0 32 22" fill="none"	
-								</svg>
+								<svg width="32" height="22" viewBox="0 0 32 22" fill="none" </svg>
 							</span>
 							<span class="app-brand-text demo text-body fw-bold ms-1">Vuexy</span>
 						</a>
@@ -58,7 +57,7 @@
 					<div class="message-container">
 						<h2 th:text="${message}"></h2>
 						<h6 th:text="${details}"></h6>
-						<p>Click <a href="http://localhost:9090/coupon/list">here</a> to Home.</p>
+						<p>Click <a th:href="${url}" th:text="${button}"></a></p>
 					</div>
 				</div>
 			</div>

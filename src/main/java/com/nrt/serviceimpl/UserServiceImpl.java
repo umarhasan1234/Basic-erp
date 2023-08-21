@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -43,8 +44,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private JwtUtil jwtUtil;
+
 	@Autowired
-	BCryptPasswordEncoder passwordEncoder;
+	private BCryptPasswordEncoder passwordEncoder;
 
 	private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -103,9 +105,13 @@ public class UserServiceImpl implements UserService {
 		return new ResponseEntity<User>(user.get(), HttpStatus.OK);
 	}
 
-	public ResponseEntity<User> updatePassword(String userId, String oldPassword, String newPassword) {
-
-		Optional<User> optionalUser = userRepository.findByEmail(userId);
+	public ResponseEntity<User> updatePassword(String oldPassword, String newPassword) {
+		Optional<User> optionalUser = null;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			optionalUser = userRepository.findByEmail(userDetails.getUsername());
+		}
 		if (optionalUser.isPresent()) {
 			User user = optionalUser.get();
 			String currentPassword = user.getPassword();
@@ -120,6 +126,7 @@ public class UserServiceImpl implements UserService {
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+
 	}
 
 	@Override

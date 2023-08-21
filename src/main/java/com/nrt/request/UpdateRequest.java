@@ -10,7 +10,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class UpdateRequest {
-	private String userId;
 	private String oldPassword;
 	private String newPassword;
 	private String confirmPassword;

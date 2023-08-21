@@ -35,6 +35,8 @@ public class CouponController {
 			ModelAndView modelAndView) {
 		modelAndView.addObject("title", "Successful register");
 		modelAndView.addObject("message", "Coupon registered successfully!");
+		modelAndView.addObject("url", "http://localhost:9090/coupon/list");
+		modelAndView.addObject("button", "to Home");
 		modelAndView.addObject("details", "\"Congratulations! Your coupon registration was successful.!");
 		modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
 		modelAndView.setViewName(
@@ -42,6 +44,7 @@ public class CouponController {
 		return modelAndView;
 
 	}
+
 	// this method find the data by coupon id
 	@GetMapping("/edit-coupon/{couponId}")
 	public ModelAndView editCoupon(@PathVariable("couponId") String couponId, @RequestParam("flag") String flag,
@@ -57,7 +60,8 @@ public class CouponController {
 			couponRequest = couponService.getCouponById(CommonUtil.changeStringToLong(couponId));
 			modelAndView.setViewName(couponRequest != null ? "/html/coupon/coupon_update" : "/html/coupon/error");
 		}
-
+		modelAndView.addObject("url", "http://localhost:9090/coupon/list");
+		modelAndView.addObject("button", "to Home");
 		modelAndView.addObject("coupon", couponRequest);
 		modelAndView.addObject("error", "Please Inter vailid id . And  try again.");
 		return modelAndView;
@@ -68,6 +72,8 @@ public class CouponController {
 	public ModelAndView Update(@ModelAttribute("couponRequest") CouponRequest couponRequest,
 			ModelAndView modelAndView) {
 		modelAndView.addObject("title", "Successful updated");
+		modelAndView.addObject("url", "http://localhost:9090/coupon/list");
+		modelAndView.addObject("button", "to Home");
 		modelAndView.addObject("message", "Coupon updated successfully!");
 		modelAndView.addObject("details", "\"Congratulations! Your coupon updation was successful.!");
 		modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
