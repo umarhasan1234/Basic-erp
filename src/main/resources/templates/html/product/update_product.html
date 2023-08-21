@@ -8,7 +8,7 @@
 <h1>Update Product</h1>
 <form th:object="${product}" th:action="@{/updateProduct}" method="post">
 	<label for="name">Product Id:</label>
-    <input type="number" th:field="${product.id}"/><br>
+    <input type="number" th:field="${product.id}" th:readonly="true"/><br>
     
     <label for="name">Product Name:</label>
     <input type="text" id="name" name="name" th:value="${product.name}"required/><br>
