@@ -5,10 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -20,6 +23,9 @@ public class EmailSender {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
+
+	@Autowired
+	private TemplateEngine templateEngine;
 
 	private Logger log = LoggerFactory.getLogger(EmailSender.class);
 
@@ -54,6 +60,26 @@ public class EmailSender {
 			log.error("error inside the email send call ");
 			log.error(e.getMessage());
 		}
+	}
+
+	public void sendWelcomeEmail(String to, String username, String role, String password, String subject)
+			throws MessagingException {
+		MimeMessage message = javaMailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+		Context context = new Context();
+		context.setVariable("username", username);
+		context.setVariable("role", role);
+		context.setVariable("password", password);
+
+		String emailContent = templateEngine.process("/html/email/welcome", context);
+
+		helper.setTo(to);
+		helper.setSubject(subject);
+		helper.setText(emailContent, true);
+		ClassPathResource imageResource = new ClassPathResource("templates/html/email/nrt.png");
+		helper.addInline("nrtLogo", imageResource);
+		javaMailSender.send(message);
 	}
 
 }

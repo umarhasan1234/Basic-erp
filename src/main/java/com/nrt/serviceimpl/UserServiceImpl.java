@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.nrt.Email.EmailSender;
 import com.nrt.authentication.CustomUserDetails;
 import com.nrt.authentication.CustomUserService;
 import com.nrt.authentication.JwtUtil;
@@ -35,6 +37,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -43,8 +46,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private JwtUtil jwtUtil;
+
 	@Autowired
-	BCryptPasswordEncoder passwordEncoder;
+	private BCryptPasswordEncoder passwordEncoder;
+
+	@Autowired
+	private EmailSender emailSender;
 
 	private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -59,13 +66,14 @@ public class UserServiceImpl implements UserService {
 			user.setStatus(0);
 			user.setCreatedAt(date);
 			user.setUpdatedAt(date);
-			user.setPasswordUpdated(date);
 			user.setRole(new Role("ROLE_" + userRequest.getRequestRole().toUpperCase()));
 			String generateRandomPassword = RandomPasswordGeneratorWithPattern.generateRandomPassword();
 			String hashedPassword = passwordEncoder.encode(generateRandomPassword);
 			user.setPassword(hashedPassword);
 			System.out.println(generateRandomPassword);
 			user = userRepository.save(user);
+			emailSender.sendWelcomeEmail(user.getEmail(), user.getEmail(), user.getRole().getRole(),
+					generateRandomPassword, "Registration Successfully Done..!");
 		} catch (Exception e) {
 			log.info("error inside the user register method");
 			log.error(e.getLocalizedMessage());
@@ -94,7 +102,8 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ResponseEntity.ok(new LoginResponce(token, userOptional.get().getRole().getRole()));
+		return ResponseEntity.ok(new LoginResponce(token, userOptional.get().getRole().getRole(),
+				userOptional.get().getPasswordUpdated()));
 	}
 
 	public ResponseEntity<User> getUserById(long id) {
@@ -103,14 +112,20 @@ public class UserServiceImpl implements UserService {
 		return new ResponseEntity<User>(user.get(), HttpStatus.OK);
 	}
 
-	public ResponseEntity<User> updatePassword(String userId, String oldPassword, String newPassword) {
-
-		Optional<User> optionalUser = userRepository.findByEmail(userId);
+	public ResponseEntity<User> updatePassword(String oldPassword, String newPassword) {
+		Date date = Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
+		Optional<User> optionalUser = null;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			optionalUser = userRepository.findByEmail(userDetails.getUsername());
+		}
 		if (optionalUser.isPresent()) {
 			User user = optionalUser.get();
 			String currentPassword = user.getPassword();
 
 			if (passwordEncoder.matches(oldPassword, currentPassword)) {
+				user.setPasswordUpdated(date);
 				user.setPassword(passwordEncoder.encode(newPassword));
 				userRepository.save(user);
 				return new ResponseEntity<>(user, HttpStatus.OK);
@@ -120,6 +135,7 @@ public class UserServiceImpl implements UserService {
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+
 	}
 
 	@Override
