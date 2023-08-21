@@ -3,7 +3,6 @@ package com.nrt.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,14 +15,11 @@ import com.nrt.entity.Product;
 import com.nrt.request.ProductRequest;
 import com.nrt.service.ProductService;
 
-
 @Controller
 public class ProductController {
 
 	@Autowired
 	private ProductService productService;
-
-
 
 	// this method redirect Add Product page
 	@RequestMapping("/product")
@@ -31,32 +27,25 @@ public class ProductController {
 		modelAndView.setViewName("/html/product/add_Product");
 		return modelAndView;
 	}
-	
-	 @GetMapping("/favicon.ico")
-	    public ResponseEntity<Void> favicon() {
-	        return ResponseEntity.noContent().build();
-	    }
 
 	// this method Add product
-	 @RequestMapping("/saveProduct")
-	    public ModelAndView addProduct(@ModelAttribute("productRequest") ProductRequest productRequest, @RequestParam("file") MultipartFile file,
-	            ModelAndView modelAndView) {
-		 
-		 
-	        boolean b = productService.saveProduct(productRequest, file);//call sevice layer saveProduct method
-	        if (!b) {
-	            modelAndView.addObject("errorMessage", "Product is already exists.");
-	            modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
-	            modelAndView.setViewName("/html/product/error_message");
-	        } else {
-	            modelAndView.addObject("title", "Save Product");
-	            modelAndView.addObject("message", "Successfully added");
-	            modelAndView.addObject("details", "Congratulations! Product added successfully!");
-	            modelAndView.setViewName("/html/product/response_message");
-	        }
-	        return modelAndView;
-	    }
+	@RequestMapping("/saveProduct")
+	public ModelAndView addProduct(@ModelAttribute("productRequest") ProductRequest productRequest,
+			@RequestParam("file") MultipartFile file, ModelAndView modelAndView) {
 
+		boolean b = productService.saveProduct(productRequest, file);// call sevice layer saveProduct method
+		if (!b) {
+			modelAndView.addObject("errorMessage", "Product is already exists.");
+			modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
+			modelAndView.setViewName("/html/product/error_message");
+		} else {
+			modelAndView.addObject("title", "Save Product");
+			modelAndView.addObject("message", "Successfully added");
+			modelAndView.addObject("details", "Congratulations! Product added successfully!");
+			modelAndView.setViewName("/html/product/response_message");
+		}
+		return modelAndView;
+	}
 
 	// this method find all product
 	@GetMapping("/listProduct")
@@ -107,8 +96,8 @@ public class ProductController {
 		modelAndView.addObject("message", "Successfull");
 		modelAndView.addObject("details", "\"Congratulations! Product Update successfully !");
 		modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
-		modelAndView.setViewName(
-				productService.updateProducts(product) ? "/html/product/response_message" : "/html/product/error_message");
+		modelAndView.setViewName(productService.updateProducts(product) ? "/html/product/response_message"
+				: "/html/product/error_message");
 		return modelAndView;
 
 	}
