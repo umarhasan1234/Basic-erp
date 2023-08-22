@@ -1,18 +1,80 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>List of Categories</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<h1>List of Categories</h1>
-<ul>
-    <li th:each="category : ${categories}">
-        <span th:text="${category.name}"></span>
-    </li>
-</ul>
+<head>
+	<title>Catagory List</title>
+	<style>
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			padding: 8px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+
+		th {
+			background-color: #f2f2f2;
+		}
+	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">BASIC-ERP</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li><a href="/product">Add-Product</a></li>
+				<li><a href="/saveCatagory">Add Catagory</a></li>
+				<li><a href="/listProduct">Product List</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="http://localhost:9090/profile"><span class="glyphicon glyphicon-user"></span>Profile</a>
+				</li>
+				<li><a href="http://localhost:9090/logout"><span class="glyphicon glyphicon-log-in">Logout</span></a>
+				</li>
+			</ul>
+		</div>
+		
+	</nav>
+
+<h1>List of Catagories</h1>
+
+
+<table border>
+		<tr>
+			<th>Catagory Id</th>
+			<th>Catagory Name</th>
+			<th>Catagory Description</th>
+			<th>Update Catagory</th>
+			<th>Delete Catagory</th>
+		</tr>
+    
+  
+    <tr th:each="catagory : ${catagories}">
+        <td th:text="${catagory.catagoryId}"></td>
+        <td th:text="${catagory.catagoryName}"></td>
+        <td th:text="${catagory.catagoryDescription}"></td>
+		<td><a th:href="@{/updateByCatagoryId/(id=${catagory.catagoryId})}">update</a></td>
+        <td><a th:href="@{/delete/(id=${catagory.catagoryName})}">delete</a></td>
+    </tr>
+</table>
 
 <br />
-<a href="/categories/add">Add Category</a>
+
 </body>
 </html>
+
+
+
+
+
