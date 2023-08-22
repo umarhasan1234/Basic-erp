@@ -12,12 +12,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @Table(name = "products_table")
-@Entity
 public class Product {
 
 	@Id

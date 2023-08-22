@@ -68,8 +68,8 @@
 			<td th:text="${product.maxRetailPrice}"></td>
 			<td th:text="${product.sellingPrice}"></td>
 			<td th:text="${product.quantity}"></td>
-			<td><a th:href="@{/updateById/(id=${product.id})}">update</a></td>
-			<td><a th:href="@{/delete/(id=${product.id})}">delete</a></td>
+			<td><a th:href="@{/updateProductById/(id=${product.id})}">update</a></td>
+			<td><a th:href="@{/deleteProduct/(id=${product.id})}">delete</a></td>
 		</tr>
 
 

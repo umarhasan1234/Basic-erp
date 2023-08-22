@@ -74,7 +74,7 @@ public class ProductController {
 	}
 
 	// this method delete product by id
-	@GetMapping("/delete/")
+	@GetMapping("/deleteProduct/")
 	public ModelAndView deleteProduct(@RequestParam("id") Long id, ModelAndView modelAndView) {
 
 		productService.deleteProduct(id);
@@ -86,7 +86,7 @@ public class ProductController {
 	}
 
 	// update product call by id
-	@GetMapping("/updateById/")
+	@GetMapping("/updateProductById/")
 	public ModelAndView updateProduct(@RequestParam("id") Long id, @ModelAttribute Product product,
 			ModelAndView modelAndView) {
 		product = productService.GetProductById(id);
