@@ -33,9 +33,13 @@ import com.nrt.request.LoginRequest;
 import com.nrt.request.UserRequest;
 import com.nrt.responce.LoginResponce;
 import com.nrt.service.UserService;
+import com.nrt.util.OTPGenerator;
 import com.nrt.util.RandomPasswordGeneratorWithPattern;
 
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -57,6 +61,8 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private EmailSender emailSender;
+
+	private static final String OTP_COOKIE_NAME = "OTP";
 
 	private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -174,5 +180,67 @@ public class UserServiceImpl implements UserService {
 			userRequest.setRequestRole(userOption.get().getRole().getRole());
 		}
 		return userRequest;
+	}
+
+	@Override
+	public Boolean SendOTP(String email, HttpServletResponse response) {
+		Optional<User> userOption = userRepository.findByEmail(email);
+		if (userOption.isPresent()) {
+			Map<String, String> sourceMap = new HashMap<String, String>();
+			String generateOTP = OTPGenerator.generateOTP(6);
+			sourceMap.put("username", userOption.get().getFirstName() + " " + userOption.get().getLastName());
+			Cookie tokenCookie = new Cookie("OTP", generateOTP);
+			tokenCookie.setMaxAge(24 * 60 * 60);
+			tokenCookie.setPath("/");
+			response.addCookie(tokenCookie);
+			sourceMap.put("OTP", generateOTP);
+			try {
+				emailSender.sendEmail(email, "FORGOT PASSWORD ", "/html/email/forgot-password-template", sourceMap);
+				return Boolean.TRUE;
+			} catch (MessagingException e) {
+				return Boolean.FALSE;
+			}
+		}
+		return Boolean.FALSE;
+
+	}
+
+	@Override
+	public Boolean OTPVelidation(Integer otp, HttpServletRequest request) {
+		String OTP = null;
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals(OTP_COOKIE_NAME)) {
+					OTP = cookie.getValue();
+					if (otp == Integer.parseInt(OTP))
+						return Boolean.TRUE;
+
+					else
+						return Boolean.FALSE;
+				}
+			}
+
+		}
+		return Boolean.FALSE;
+
+	}
+
+	@Override
+	public void ForgotPassword(String newPassword) {
+		Date date = Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserRequest userRequest = new UserRequest();
+		if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			Optional<User> userOption = userRepository.findByEmail(userDetails.getUsername());
+
+			if (userOption.isPresent()) {
+				User user = userOption.get();
+				user.setPasswordUpdated(date);
+				user.setPassword(passwordEncoder.encode(newPassword));
+				userRepository.save(user);
+			}
+		}
 	}
 }

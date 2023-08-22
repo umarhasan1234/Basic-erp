@@ -7,6 +7,9 @@ import com.nrt.request.LoginRequest;
 import com.nrt.request.UserRequest;
 import com.nrt.responce.LoginResponce;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 public interface UserService {
 	public ResponseEntity<User> saveData(UserRequest userRequest);
 
@@ -18,5 +21,10 @@ public interface UserService {
 
 	public UserRequest getUserByEmail();
 
+	public Boolean SendOTP(String email, HttpServletResponse response);
+
+	public Boolean OTPVelidation(Integer otp,HttpServletRequest request);
+
+	public void ForgotPassword(String newPassword);
 
 }
