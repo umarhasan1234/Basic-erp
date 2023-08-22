@@ -98,12 +98,13 @@ public class ProductController {
 
 //	//update product 
 	@RequestMapping("/updateProduct")
-	public ModelAndView updateProduct(@ModelAttribute Product product, ModelAndView modelAndView) {
+	public ModelAndView updateProduct(@ModelAttribute("product") Product product,
+			@RequestParam("file") MultipartFile file, ModelAndView modelAndView) {
 		modelAndView.addObject("title", "Product update");
 		modelAndView.addObject("message", "Successfull");
 		modelAndView.addObject("details", "\"Congratulations! Product Update successfully !");
 		modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
-		modelAndView.setViewName(productService.updateProducts(product) ? "/html/product/response_message"
+		modelAndView.setViewName(productService.updateProducts(product, file) ? "/html/product/response_message"
 				: "/html/product/error_message");
 		return modelAndView;
 

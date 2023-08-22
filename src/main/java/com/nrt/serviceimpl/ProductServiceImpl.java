@@ -44,9 +44,13 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public boolean updateProducts(Product productUpdate) {
+	public boolean updateProducts(Product productUpdate, MultipartFile file) {
 		try {
+			productUpdate.setImagePath(file.getOriginalFilename());
 			Product updatedProduct = productRepository.save(productUpdate);
+			String imagePath = imageUploadPath + file.getOriginalFilename();
+			Path destination = Paths.get(imagePath);
+			Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
 			return updatedProduct != null; // Return true if the save operation was successful
 		} catch (Exception e) {
 			e.printStackTrace(); // You can handle the exception as needed

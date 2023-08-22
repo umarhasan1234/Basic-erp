@@ -7,11 +7,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nrt.entity.Product;
 import com.nrt.request.ProductRequest;
 
-
 public interface ProductService {
-	boolean saveProduct(ProductRequest productRequest,MultipartFile file);
-	List<Product> getAllProduct();
-	Product GetProductById(Long id);
-	void deleteProduct(Long id);
-	boolean updateProducts(Product product);
+	public boolean saveProduct(ProductRequest productRequest, MultipartFile file);
+
+	public List<Product> getAllProduct();
+
+	public Product GetProductById(Long id);
+
+	public void deleteProduct(Long id);
+
+	public boolean updateProducts(Product product, MultipartFile file);
 }
