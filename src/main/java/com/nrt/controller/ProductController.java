@@ -10,10 +10,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.nrt.entity.Product;
 import com.nrt.request.ProductRequest;
 import com.nrt.service.ProductService;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class ProductController {
@@ -102,4 +109,23 @@ public class ProductController {
 
 	}
 
+	@GetMapping(value = "/images/{imageName}", produces = MediaType.APPLICATION_ATOM_XML_VALUE)
+	public void getImage(@PathVariable String imageName, HttpServletResponse response) throws IOException {
+		String imageFilePath = "D:\\NRT-WORK-SPACE\\Basic-erp\\src\\main\\resources\\static\\images\\" + imageName;
+		File imageFile = new File(imageFilePath);
+		if (!imageFile.exists() || !imageFile.isFile()) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
+		response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+		try (InputStream inputStream = new FileInputStream(imageFile);
+				ServletOutputStream outputStream = response.getOutputStream()) {
+
+			byte[] buffer = new byte[1024];
+			int bytesRead;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, bytesRead);
+			}
+		}
+	}
 }
