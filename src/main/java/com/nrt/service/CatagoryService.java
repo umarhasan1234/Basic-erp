@@ -11,7 +11,7 @@ public interface CatagoryService {
 	
 	public boolean saveCatagory(CatagoryRequest catagoryRequest);
 	public List<Catagory> getAllCatagory();
-	public Catagory GetProductById(Long id);
+	public Catagory getCatagoryById(Long id);
 	public void deleteCatagory(Long id);
 	public boolean updateCatagory(Catagory catagory);
 
