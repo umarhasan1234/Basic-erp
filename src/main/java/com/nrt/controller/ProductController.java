@@ -1,6 +1,5 @@
 package com.nrt.controller;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,51 +10,54 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.nrt.entity.Product;
-import com.nrt.repository.ProductRepository;
+import com.nrt.request.ProductRequest;
 import com.nrt.service.ProductService;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class ProductController {
 
 	@Autowired
-	private ProductService productImpl;
+	private ProductService productService;
 
-	@Autowired
-	private ProductRepository productRepository;
-
-	// this method redirect product page
+	// this method redirect Add Product page
 	@RequestMapping("/product")
 	public ModelAndView defaultMethod(ModelAndView modelAndView) {
-		modelAndView.setViewName("/html/product/add_Product"); // View name without extension
+		modelAndView.setViewName("/html/product/add_Product");
 		return modelAndView;
 	}
 
-	// this method add product
+	// this method Add product
 	@RequestMapping("/saveProduct")
-	public ModelAndView addProduct(@ModelAttribute("product") Product product, @RequestParam("file") MultipartFile file,
-			ModelAndView modelAndView) {
+	public ModelAndView addProduct(@ModelAttribute("productRequest") ProductRequest productRequest,
+			@RequestParam("file") MultipartFile file, ModelAndView modelAndView) {
 
-		if (productRepository.existsById(product.getId())) {
-			modelAndView.addObject("errorMessage", "Product with ID " + product.getId() + " already exists.");
+		boolean b = productService.saveProduct(productRequest, file);// call sevice layer saveProduct method
+		if (!b) {
+			modelAndView.addObject("errorMessage", "Product is already exists.");
 			modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
 			modelAndView.setViewName("/html/product/error_message");
-			return modelAndView; // Return the name of the Thymeleaf template for displaying the error
+		} else {
+			modelAndView.addObject("title", "Save Product");
+			modelAndView.addObject("message", "Successfully added");
+			modelAndView.addObject("details", "Congratulations! Product added successfully!");
+			modelAndView.setViewName("/html/product/response_message");
 		}
-		System.out.println(file.getName());
-		// productRepository.save(product);
-		modelAndView.addObject("title", "Save Product");
-		modelAndView.addObject("message", "Successfull");
-		modelAndView.addObject("details", "\"Congratulations! ADD Product successfully !");
-		modelAndView.setViewName("/html/product/respinse_message");
 		return modelAndView;
 	}
 
 	// this method find all product
 	@GetMapping("/listProduct")
 	public ModelAndView findProduct(ModelAndView modelAndView) {
-		List<Product> products = productImpl.getAllProduct();
+		List<Product> products = productService.getAllProduct();
 		modelAndView.addObject("products", products);
 		modelAndView.setViewName("/html/product/list_product");
 		return modelAndView;
@@ -64,7 +66,7 @@ public class ProductController {
 	// this method find product by id
 	@GetMapping("/getProduct/")
 	public ModelAndView getProduct(@RequestParam("id") Long id, ModelAndView modelAndView) {
-		Product products = productImpl.GetProductById(id);
+		Product products = productService.GetProductById(id);
 
 		modelAndView.addObject("getProductById", products);
 		modelAndView.setViewName("/html/product/list_product");
@@ -75,9 +77,9 @@ public class ProductController {
 	@GetMapping("/delete/")
 	public ModelAndView deleteProduct(@RequestParam("id") Long id, ModelAndView modelAndView) {
 
-		productImpl.deleteProduct(id);
+		productService.deleteProduct(id);
 
-		List<Product> products = productImpl.getAllProduct();
+		List<Product> products = productService.getAllProduct();
 		modelAndView.addObject("products", products);
 		modelAndView.setViewName("/html/product/list_product");
 		return modelAndView;
@@ -87,7 +89,7 @@ public class ProductController {
 	@GetMapping("/updateById/")
 	public ModelAndView updateProduct(@RequestParam("id") Long id, @ModelAttribute Product product,
 			ModelAndView modelAndView) {
-		product = productImpl.GetProductById(id);
+		product = productService.GetProductById(id);
 		modelAndView.addObject("product", product);
 		modelAndView.setViewName("/html/product/update_product"); // View name without extension
 		return modelAndView;
@@ -101,10 +103,29 @@ public class ProductController {
 		modelAndView.addObject("message", "Successfull");
 		modelAndView.addObject("details", "\"Congratulations! Product Update successfully !");
 		modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
-		modelAndView.setViewName(
-				productImpl.updateProducts(product) ? "/html/product/response_message" : "/html/product/error_message");
+		modelAndView.setViewName(productService.updateProducts(product) ? "/html/product/response_message"
+				: "/html/product/error_message");
 		return modelAndView;
 
 	}
 
+	@GetMapping(value = "/images/{imageName}", produces = MediaType.APPLICATION_ATOM_XML_VALUE)
+	public void getImage(@PathVariable String imageName, HttpServletResponse response) throws IOException {
+		String imageFilePath = "D:\\NRT-WORK-SPACE\\Basic-erp\\src\\main\\resources\\static\\images\\" + imageName;
+		File imageFile = new File(imageFilePath);
+		if (!imageFile.exists() || !imageFile.isFile()) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
+		response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+		try (InputStream inputStream = new FileInputStream(imageFile);
+				ServletOutputStream outputStream = response.getOutputStream()) {
+
+			byte[] buffer = new byte[1024];
+			int bytesRead;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, bytesRead);
+			}
+		}
+	}
 }
