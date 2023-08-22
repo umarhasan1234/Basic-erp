@@ -11,15 +11,15 @@
 	</br><a href="/listProduct">Product List</a></br>
 	</br><a href="/listCatagory">Catagory List</a></br>
 </div>
-<form th:object="${catagory}" th:action="@{/updateCatagory}" method="post">
+<form th:object="${catagories}" th:action="@{/updateCatagory}" method="post">
 	<label for="name">Catagory Id:</label>
-    <input type="number" th:field="${catagory.catagoryId}" th:readonly="true"/><br><br>
+    <input type="number" th:field="${catagories.catagoryId}" th:readonly="true"/><br><br>
     
     <label for="name">Catagory Name:</label>
-    <input type="text" id="catagoryName" name="catagoryName" th:value="${catagory.catagoryName}"required/><br><br>
+    <input type="text" id="catagoryName" name="catagoryName" th:value="${catagories.catagoryName}"required/><br><br>
     
     <label for="description">Catagory Description:</label>
-    <input type="text" id="catagoryDescription" name="catagoryDescription" th:value="${catagory.catagoryDescription}"required/><br><br>
+    <input type="text" id="catagoryDescription" name="catagoryDescription" th:value="${catagories.catagoryDescription}"required/><br><br>
     
     
     <button type="submit">Update Catagory</button>

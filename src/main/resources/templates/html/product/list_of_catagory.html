@@ -34,7 +34,7 @@
 			</div>
 			<ul class="nav navbar-nav">
 				<li><a href="/product">Add-Product</a></li>
-				<li><a href="/saveCatagory">Add Catagory</a></li>
+				<li><a href="/catagory">Add Catagory</a></li>
 				<li><a href="/listProduct">Product List</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
@@ -60,12 +60,12 @@
 		</tr>
     
   
-    <tr th:each="catagory : ${catagories}">
-        <td th:text="${catagory.catagoryId}"></td>
-        <td th:text="${catagory.catagoryName}"></td>
-        <td th:text="${catagory.catagoryDescription}"></td>
-		<td><a th:href="@{/updateByCatagoryId/(id=${catagory.catagoryId})}">update</a></td>
-        <td><a th:href="@{/delete/(id=${catagory.catagoryName})}">delete</a></td>
+    <tr th:each="catagories : ${catagories}">
+        <td th:text="${catagories.catagoryId}"></td>
+        <td th:text="${catagories.catagoryName}"></td>
+        <td th:text="${catagories.catagoryDescription}"></td>
+		<td><a th:href="@{/updateByCatagoryId/(id=${catagories.catagoryId})}">update</a></td>
+        <td><a th:href="@{/deleteCatagory/(id=${catagories.catagoryId})}">delete</a></td>
     </tr>
 </table>
 
