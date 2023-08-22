@@ -46,10 +46,10 @@ public class ProductController {
 			modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
 			modelAndView.setViewName("/html/product/error_message");
 		} else {
-			modelAndView.addObject("title", "Save Product");
-			modelAndView.addObject("message", "Successfully added");
-			modelAndView.addObject("details", "Congratulations! Product added successfully!");
-			modelAndView.setViewName("/html/product/response_message");
+	
+			List<Product> products = productService.getAllProduct();
+			modelAndView.addObject("products", products);
+			modelAndView.setViewName("/html/product/list_product");
 		}
 		return modelAndView;
 	}
