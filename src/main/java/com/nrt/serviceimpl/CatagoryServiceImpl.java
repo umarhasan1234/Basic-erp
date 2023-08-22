@@ -1,15 +1,10 @@
 package com.nrt.serviceimpl;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.nrt.entity.Catagory;
 import com.nrt.entity.Product;
@@ -42,21 +37,26 @@ public class CatagoryServiceImpl implements CatagoryService{
 	
 
 	@Override
-	public Catagory GetProductById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Catagory getCatagoryById(Long id) {
+		Optional<Catagory> findById = catagoryRepository.findById(id);
+		return findById.get();
 	}
 
 	@Override
 	public void deleteCatagory(Long id) {
-		// TODO Auto-generated method stub
+		catagoryRepository.deleteById(id);
 		
 	}
 
 	@Override
 	public boolean updateCatagory(Catagory catagory) {
-		// TODO Auto-generated method stub
-		return false;
+		 try {
+	            Catagory updateCatagory = catagoryRepository.save(catagory);
+	            return updateCatagory != null; // Return true if the save operation was successful
+	        } catch (Exception e) {
+	            e.printStackTrace(); // You can handle the exception as needed
+	            return false; // Return false if an exception occurs during the save operation
+	        }
 	}
 
 

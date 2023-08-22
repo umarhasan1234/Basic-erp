@@ -55,5 +55,54 @@ public class CatagoryController {
 		return modelAndView;
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// this method delete product by id
+	@GetMapping("/delete/")
+	public ModelAndView deleteProduct(@RequestParam("id") Long id, ModelAndView modelAndView) {
+
+		catagoryService.deleteCatagory(id);
+
+		List<Catagory> catagories = catagoryService.getAllCatagory();
+		modelAndView.addObject("catagories", catagories);
+		modelAndView.setViewName("/html/product/list_of_catagory");
+		return modelAndView;
+	}
+
+	// update product call by id
+	@GetMapping("/updateCatagoryById/")
+	public ModelAndView updateProduct(@RequestParam("id") Long id, @ModelAttribute Catagory catagory,
+			ModelAndView modelAndView) {
+		catagory = catagoryService.getCatagoryById(id);
+		modelAndView.addObject("catagory", catagory);
+		modelAndView.setViewName("/html/product/update_catagory"); // View name without extension
+		return modelAndView;
+
+	}
+
+//	//update product 
+	@RequestMapping("/updateCatagory")
+	public ModelAndView updateProduct(@ModelAttribute Catagory catagory, ModelAndView modelAndView) {
+		modelAndView.addObject("title", "Catagory update");
+		modelAndView.addObject("message", "Successfull");
+		modelAndView.addObject("details", "\"Congratulations! Catagory Update successfully !");
+		modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
+		modelAndView.setViewName(
+				catagoryService.updateCatagory(catagory) ? "/html/product/response_message" : "/html/product/error_message");
+		return modelAndView;
+
+	}
+	
 
 }
