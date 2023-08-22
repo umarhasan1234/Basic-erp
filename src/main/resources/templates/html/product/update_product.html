@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Update Product</title>
-</head>
-<body>
 
+<html lang="en" class="light-style customizer-hide" dir="ltr" data-theme="theme-default"
+	data-assets-path="../../assets/" data-template="horizontal-menu-template">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+</head>
+
+<body>
 <h1>Update Product</h1>
 <form th:object="${product}" th:action="@{/updateProduct}" method="post">
 	<label for="name">Product Id:</label>
@@ -36,4 +42,5 @@
 </form>
 </br><a href="/listProduct">Go to Product List</a></br>
 </body>
+
 </html>
