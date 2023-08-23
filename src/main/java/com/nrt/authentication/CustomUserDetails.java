@@ -2,12 +2,15 @@ package com.nrt.authentication;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.nrt.entity.Permission;
 import com.nrt.entity.User;
 
 import lombok.NoArgsConstructor;
@@ -27,11 +30,13 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-
-		String role = user.getRole().getRole();
-		HashSet<SimpleGrantedAuthority> set = new HashSet<>();
-		set.add(new SimpleGrantedAuthority(role));
-		return set;
+		Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+		List<Permission> roles = user.getRoles();
+		for (Permission role : roles) {
+			authorities.add(new SimpleGrantedAuthority(role.getRole()));
+		}
+//		authorities.add(new SimpleGrantedAuthority("ROLE_SUPER ADMIN"));
+		return authorities;
 
 	}
 

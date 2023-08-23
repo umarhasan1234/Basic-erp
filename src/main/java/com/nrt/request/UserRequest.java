@@ -14,7 +14,6 @@ public class UserRequest {
 	private String requestFirstName;
 	private String requestLastName;
 	private String requestPhone;
-	private String requestRole;
 	private String requestEmialId;
 
 }
