@@ -47,7 +47,7 @@ public class ProductController {
 	public ModelAndView defaultMethod(ModelAndView modelAndView) {
 		List<Catagory> catagories = catagoryService.getAllCatagory();
 		modelAndView.addObject("catagories", catagories);
-		List<SubCatagory> subCatagories=subCatagoryService.getAllSubCatagory();
+		List<SubCatagory> subCatagories = subCatagoryService.getAllSubCatagory();
 		modelAndView.addObject("subCatagories", subCatagories);
 		System.out.println(catagories);
 		modelAndView.setViewName("/html/product/add_Product");
@@ -58,16 +58,15 @@ public class ProductController {
 	@RequestMapping("/saveProduct")
 	public ModelAndView addProduct(@ModelAttribute("productRequest") ProductRequest productRequest,
 			@RequestParam("file") MultipartFile file, ModelAndView modelAndView) {
-		// modelAndView.addObject("subCatagory",
-		// 
-		boolean b = productService.saveProduct(productRequest, file);// call sevice layer saveProduct method
+
+		boolean b = productService.saveProduct(productRequest, file);// call sevice layer
+		// saveProduct method
 		if (!b) {
 			modelAndView.addObject("errorMessage", "Product is already exists.");
 			modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
 			modelAndView.setViewName("/html/product/error_message");
 		} else {
 
-	
 			List<Product> products = productService.getAllProduct();
 			modelAndView.addObject("products", products);
 			modelAndView.setViewName("/html/product/list_product");

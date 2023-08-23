@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nrt.entity.Catagory;
 import com.nrt.entity.Product;
 import com.nrt.entity.SubCatagory;
+import com.nrt.repository.CatagoryRepository;
 import com.nrt.repository.ProductRepository;
+import com.nrt.repository.SubCatagoryRepository;
 import com.nrt.request.ProductRequest;
 import com.nrt.service.ProductService;
 
@@ -33,6 +36,12 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> getAllProduct() {
 		return productRepository.findAll();
 	}
+
+	@Autowired
+	private CatagoryRepository catagoryRepository;
+
+	@Autowired
+	private SubCatagoryRepository subCatagoryRepository;
 
 	@Override
 	public Product GetProductById(Long id) {
@@ -63,7 +72,6 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public boolean saveProduct(ProductRequest productRequest, MultipartFile file) {
 		Product product = new Product();
-		product.setId(productRequest.getId());
 		product.setDescription(productRequest.getDescription());
 		product.setName(productRequest.getName());
 		product.setMaxRetailPrice(productRequest.getMaxRetailPrice());
@@ -71,12 +79,7 @@ public class ProductServiceImpl implements ProductService {
 		product.setSellingPrice(productRequest.getSellingPrice());
 		product.setQuantity(productRequest.getQuantity());
 		product.setImagePath(file.getOriginalFilename());
-
-//		SubCatagory subCategory=new SubCatagory();
-//		product.setSubCatagory(subCategory);
-//		
-	    
-	    if (productRepository.existsById(product.getId())) {
+		if (productRepository.existsById(product.getId())) {
 			return false;
 		} else {
 			String imagePath = imageUploadPath + file.getOriginalFilename();
@@ -86,6 +89,15 @@ public class ProductServiceImpl implements ProductService {
 			} catch (IOException e) {
 				e.printStackTrace();
 
+			}
+
+			Optional<SubCatagory> subcatagoryOption = subCatagoryRepository.findById(productRequest.getSubCategoryId());
+			Optional<Catagory> catagoryOption = catagoryRepository.findById(productRequest.getCategoryId());
+			if (subcatagoryOption.isPresent() && catagoryOption.isPresent()) {
+				List<SubCatagory> subcatagory = new ArrayList<>();
+				subcatagory.add(subcatagoryOption.get());
+				catagoryOption.get().setSubcategories(subcatagory);
+				product.setCategory(catagoryOption.get());
 			}
 			productRepository.save(product);
 			return true;

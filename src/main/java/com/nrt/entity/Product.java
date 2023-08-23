@@ -47,8 +47,8 @@ public class Product {
 
 	@Column(name = "product_path")
 	private String imagePath;
-	
+
 	@ManyToOne
-    @JoinColumn(name = "subcategory_id")
-    private SubCatagory subCatagory;
+	@JoinColumn(name = "category_id")
+	private Catagory category;
 }

@@ -13,28 +13,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name="sub_catagory")
+@Table(name = "sub_catagory")
 public class SubCatagory {
-	
-	 @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	 @Column(name="subCatagory_id")
-	    private Long subCatagoryId;
 
-	 @Column(name="subCatagory_name")
-	    private String subCatagoryName;
-	 
-	 @Column(name="subCatagory_description")
-	    private String subCatagoryDescription;
-	    
-	    @ManyToOne
-	    @JoinColumn(name = "category_id")
-	    private Catagory category;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "subCatagory_id")
+	private Long subCatagoryId;
+
+	@Column(name = "subCatagory_name")
+	private String subCatagoryName;
+
+	@Column(name = "subCatagory_description")
+	private String subCatagoryDescription;
 
 }

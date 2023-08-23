@@ -1,7 +1,5 @@
 package com.nrt.request;
 
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,8 +10,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ProductRequest {
-	
-	private long id;
 
 	private String name;
 
@@ -27,7 +23,8 @@ public class ProductRequest {
 
 	private int quantity;
 
-	private String imagePath;
+	private Long categoryId;
 
+	private Long subCategoryId;
 
 }
