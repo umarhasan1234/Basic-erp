@@ -54,20 +54,22 @@
 
 	<table border>
 		<tr>
+			<th>Catagory Id</th>
 			<th>Catagory Name</th>
 			<th>Update Catagory</th>
 			<th>Delete Catagory</th>
 		</tr>
+    
+  
+    <tr th:each="catagories : ${catagories}">
+        <td th:text="${catagories.catagoryId}"></td>
+        <td th:text="${catagories.catagoryName}"></td>
+		<td><a th:href="@{/updateByCatagoryId/(id=${catagories.catagoryId})}">update</a></td>
+        <td><a th:href="@{/deleteCatagory/(id=${catagories.catagoryId})}">delete</a></td>
+    </tr>
+</table>
 
 
-		<tr th:each="catagories : ${catagories}">
-			<td th:text="${catagories.catagoryName}"></td>
-			<td><a th:href="@{/updateByCatagoryId/(id=${catagories.catagoryId})}">update</a></td>
-			<td><a th:href="@{/deleteCatagory/(id=${catagories.catagoryId})}">delete</a></td>
-		</tr>
-	</table>
-
-	<br />
 
 </body>
 

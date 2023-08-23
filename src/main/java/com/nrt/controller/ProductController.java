@@ -65,6 +65,7 @@ public class ProductController {
 			modelAndView.setViewName("/html/product/error_message");
 		} else {
 
+	
 			List<Product> products = productService.getAllProduct();
 			modelAndView.addObject("products", products);
 			modelAndView.setViewName("/html/product/list_product");
