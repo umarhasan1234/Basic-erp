@@ -14,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,6 +34,8 @@ import com.nrt.request.UserRequest;
 import com.nrt.responce.LoginResponce;
 import com.nrt.service.UserService;
 import com.nrt.util.RandomPasswordGeneratorWithPattern;
+
+import jakarta.mail.MessagingException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -72,8 +77,13 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(hashedPassword);
 			System.out.println(generateRandomPassword);
 			user = userRepository.save(user);
-			emailSender.sendWelcomeEmail(user.getEmail(), user.getEmail(), user.getRole().getRole(),
-					generateRandomPassword, "Registration Successfully Done..!");
+			Map<String, String> sourceMap = new HashMap<String, String>();
+			sourceMap.put("password", generateRandomPassword);
+			sourceMap.put("username", user.getFirstName() + " " + user.getLastName());
+			sourceMap.put("role", user.getRole().getRole());
+			sourceMap.put("usermail", user.getEmail());
+			emailSender.sendEmail(user.getEmail(), "Registration Successfully Done..!", "/html/email/welcome-template",
+					sourceMap);
 		} catch (Exception e) {
 			log.info("error inside the user register method");
 			log.error(e.getLocalizedMessage());
@@ -128,6 +138,16 @@ public class UserServiceImpl implements UserService {
 				user.setPasswordUpdated(date);
 				user.setPassword(passwordEncoder.encode(newPassword));
 				userRepository.save(user);
+				try {
+					Map<String, String> sourceMap = new HashMap<String, String>();
+					sourceMap.put("password", currentPassword);
+					sourceMap.put("username", user.getFirstName() + " " + user.getLastName());
+					emailSender.sendEmail(user.getEmail(), "Password Updated Successfully",
+							"/html/email/update-password-template");
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
+
 				return new ResponseEntity<>(user, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(user, HttpStatus.UNAUTHORIZED);

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -42,7 +43,7 @@ public class LoginController {
 	}
 
 	@GetMapping("/login")
-	public ModelAndView CouponHomePage(ModelAndView modelAndView) {
+	public ModelAndView LoginPage(ModelAndView modelAndView) {
 		modelAndView.setViewName("/html/login/login");
 		return modelAndView;
 
@@ -71,4 +72,18 @@ public class LoginController {
 		return "redirect:/login"; // Redirect to the login page, change URL as needed
 	}
 
+	@GetMapping("/forgot/password")
+	public ModelAndView ForgotPasswordPage(ModelAndView modelAndView) {
+		modelAndView.setViewName("/html/login/forgot_password");
+		return modelAndView;
+
+	}
+
+	@GetMapping("/forgot")
+	public ModelAndView SendOTPToUpadatePassword(@RequestParam("email") String email, ModelAndView modelAndView) {
+		System.out.println(email);
+		modelAndView.setViewName("/html/login/forgot_password");
+		return modelAndView;
+
+	}
 }

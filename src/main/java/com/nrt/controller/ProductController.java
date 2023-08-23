@@ -10,9 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.nrt.entity.Catagory;
 import com.nrt.entity.Product;
+import com.nrt.entity.SubCatagory;
 import com.nrt.request.ProductRequest;
+import com.nrt.service.CatagoryService;
 import com.nrt.service.ProductService;
+import com.nrt.service.SubCatagoryService;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,9 +34,20 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
+	@Autowired
+	private CatagoryService catagoryService;
+
+	@Autowired
+	private SubCatagoryService subCatagoryService;
+
 	// this method redirect Add Product page
 	@RequestMapping("/product")
 	public ModelAndView defaultMethod(ModelAndView modelAndView) {
+		List<Catagory> catagories = catagoryService.getAllCatagory();
+		modelAndView.addObject("catagories", catagories);
+		List<SubCatagory> subCatagories=subCatagoryService.getAllSubCatagory();
+		modelAndView.addObject("subCatagories", subCatagories);
+		System.out.println(catagories);
 		modelAndView.setViewName("/html/product/add_Product");
 		return modelAndView;
 	}
@@ -39,17 +56,19 @@ public class ProductController {
 	@RequestMapping("/saveProduct")
 	public ModelAndView addProduct(@ModelAttribute("productRequest") ProductRequest productRequest,
 			@RequestParam("file") MultipartFile file, ModelAndView modelAndView) {
-
+		// modelAndView.addObject("subCatagory",
+		// 
 		boolean b = productService.saveProduct(productRequest, file);// call sevice layer saveProduct method
 		if (!b) {
 			modelAndView.addObject("errorMessage", "Product is already exists.");
 			modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
 			modelAndView.setViewName("/html/product/error_message");
 		} else {
-			modelAndView.addObject("title", "Save Product");
-			modelAndView.addObject("message", "Successfully added");
-			modelAndView.addObject("details", "Congratulations! Product added successfully!");
-			modelAndView.setViewName("/html/product/response_message");
+
+	
+			List<Product> products = productService.getAllProduct();
+			modelAndView.addObject("products", products);
+			modelAndView.setViewName("/html/product/list_product");
 		}
 		return modelAndView;
 	}
@@ -74,7 +93,7 @@ public class ProductController {
 	}
 
 	// this method delete product by id
-	@GetMapping("/delete/")
+	@GetMapping("/deleteProduct/")
 	public ModelAndView deleteProduct(@RequestParam("id") Long id, ModelAndView modelAndView) {
 
 		productService.deleteProduct(id);
@@ -86,7 +105,7 @@ public class ProductController {
 	}
 
 	// update product call by id
-	@GetMapping("/updateById/")
+	@GetMapping("/updateProductById/")
 	public ModelAndView updateProduct(@RequestParam("id") Long id, @ModelAttribute Product product,
 			ModelAndView modelAndView) {
 		product = productService.GetProductById(id);
@@ -98,12 +117,13 @@ public class ProductController {
 
 //	//update product 
 	@RequestMapping("/updateProduct")
-	public ModelAndView updateProduct(@ModelAttribute Product product, ModelAndView modelAndView) {
+	public ModelAndView updateProduct(@ModelAttribute("product") Product product,
+			@RequestParam("file") MultipartFile file, ModelAndView modelAndView) {
 		modelAndView.addObject("title", "Product update");
 		modelAndView.addObject("message", "Successfull");
 		modelAndView.addObject("details", "\"Congratulations! Product Update successfully !");
 		modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
-		modelAndView.setViewName(productService.updateProducts(product) ? "/html/product/response_message"
+		modelAndView.setViewName(productService.updateProducts(product, file) ? "/html/product/response_message"
 				: "/html/product/error_message");
 		return modelAndView;
 
@@ -111,7 +131,7 @@ public class ProductController {
 
 	@GetMapping(value = "/images/{imageName}", produces = MediaType.APPLICATION_ATOM_XML_VALUE)
 	public void getImage(@PathVariable String imageName, HttpServletResponse response) throws IOException {
-		String imageFilePath = "D:\\NRT-WORK-SPACE\\Basic-erp\\src\\main\\resources\\static\\images\\" + imageName;
+		String imageFilePath = "D:\\sts code\\Basic-erp\\src\\main\\resources\\static\\images\\" + imageName;
 		File imageFile = new File(imageFilePath);
 		if (!imageFile.exists() || !imageFile.isFile()) {
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);

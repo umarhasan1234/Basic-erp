@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nrt.entity.Catagory;
 import com.nrt.entity.Product;
+import com.nrt.entity.SubCatagory;
 import com.nrt.repository.ProductRepository;
 import com.nrt.request.ProductRequest;
 import com.nrt.service.ProductService;
@@ -29,7 +31,6 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Product> getAllProduct() {
-		productRepository.findAll();
 		return productRepository.findAll();
 	}
 
@@ -45,9 +46,13 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public boolean updateProducts(Product productUpdate) {
+	public boolean updateProducts(Product productUpdate, MultipartFile file) {
 		try {
+			productUpdate.setImagePath(file.getOriginalFilename());
 			Product updatedProduct = productRepository.save(productUpdate);
+			String imagePath = imageUploadPath + file.getOriginalFilename();
+			Path destination = Paths.get(imagePath);
+			Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
 			return updatedProduct != null; // Return true if the save operation was successful
 		} catch (Exception e) {
 			e.printStackTrace(); // You can handle the exception as needed
@@ -66,7 +71,12 @@ public class ProductServiceImpl implements ProductService {
 		product.setSellingPrice(productRequest.getSellingPrice());
 		product.setQuantity(productRequest.getQuantity());
 		product.setImagePath(file.getOriginalFilename());
-		if (productRepository.existsById(product.getId())) {
+
+//		SubCatagory subCategory=new SubCatagory();
+//		product.setSubCatagory(subCategory);
+//		
+	    
+	    if (productRepository.existsById(product.getId())) {
 			return false;
 		} else {
 			String imagePath = imageUploadPath + file.getOriginalFilename();
