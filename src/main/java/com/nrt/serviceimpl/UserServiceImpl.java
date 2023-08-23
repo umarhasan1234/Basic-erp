@@ -1,6 +1,7 @@
 package com.nrt.serviceimpl;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -26,7 +28,7 @@ import com.nrt.Email.EmailSender;
 import com.nrt.authentication.CustomUserDetails;
 import com.nrt.authentication.CustomUserService;
 import com.nrt.authentication.JwtUtil;
-import com.nrt.entity.Role;
+import com.nrt.entity.Permission;
 import com.nrt.entity.User;
 import com.nrt.repository.UserRepository;
 import com.nrt.request.LoginRequest;
@@ -71,7 +73,6 @@ public class UserServiceImpl implements UserService {
 			user.setStatus(0);
 			user.setCreatedAt(date);
 			user.setUpdatedAt(date);
-			user.setRole(new Role("ROLE_" + userRequest.getRequestRole().toUpperCase()));
 			String generateRandomPassword = RandomPasswordGeneratorWithPattern.generateRandomPassword();
 			String hashedPassword = passwordEncoder.encode(generateRandomPassword);
 			user.setPassword(hashedPassword);
@@ -80,7 +81,6 @@ public class UserServiceImpl implements UserService {
 			Map<String, String> sourceMap = new HashMap<String, String>();
 			sourceMap.put("password", generateRandomPassword);
 			sourceMap.put("username", user.getFirstName() + " " + user.getLastName());
-			sourceMap.put("role", user.getRole().getRole());
 			sourceMap.put("usermail", user.getEmail());
 			emailSender.sendEmail(user.getEmail(), "Registration Successfully Done..!", "/html/email/welcome-template",
 					sourceMap);
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ResponseEntity.ok(new LoginResponce(token, userOptional.get().getRole().getRole(),
+		return ResponseEntity.ok(new LoginResponce(token,new HashSet(), //userOptional.get().getRole(),
 				userOptional.get().getPasswordUpdated()));
 	}
 
@@ -171,7 +171,6 @@ public class UserServiceImpl implements UserService {
 			userRequest.setRequestFirstName(userOption.get().getFirstName());
 			userRequest.setRequestLastName(userOption.get().getLastName());
 			userRequest.setRequestPhone(userOption.get().getPhoneNo());
-			userRequest.setRequestRole(userOption.get().getRole().getRole());
 		}
 		return userRequest;
 	}

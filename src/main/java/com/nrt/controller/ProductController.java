@@ -18,11 +18,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
+@PreAuthorize("hasRole('PRODUCT')")
 public class ProductController {
 
 	@Autowired

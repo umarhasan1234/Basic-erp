@@ -1,5 +1,6 @@
 package com.nrt.responce;
 import java.sql.Date;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,7 @@ public class LoginResponce {
 	
 	private String userToken;
 	
-	private String userRole;
+	private Set userRole;
 	
 	private Date userLogin;
 	
