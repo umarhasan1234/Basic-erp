@@ -95,7 +95,7 @@ public class LoginController {
 	}
 
 	@PostMapping("/forgot/velidate")
-	public ModelAndView ValidateOTP(@RequestParam("otp") Integer otp, ModelAndView modelAndView,
+	public ModelAndView ValidateOTP(@RequestParam("otp") String otp, ModelAndView modelAndView,
 			HttpServletRequest request, HttpServletResponse response) {
 		Boolean velidation = userService.OTPVelidation(otp, request);
 		if (!velidation)
@@ -107,14 +107,24 @@ public class LoginController {
 	}
 
 	@GetMapping("/forgot/update")
-	public ModelAndView PasswordUpdate(@RequestParam("newPassword") String newPassword, ModelAndView modelAndView) {
-		modelAndView.addObject("title", "Successful ForgotPassword");
-		modelAndView.addObject("message", "Password Updated successfully!");
-		modelAndView.addObject("url", "http://localhost:9090/login");
-		modelAndView.addObject("button", "to login");
-		modelAndView.addObject("details", "\"Congratulations! Your Password Forgot was successful.!");
-		userService.ForgotPassword(newPassword);
-		modelAndView.setViewName("redirect:/login");
+	public ModelAndView PasswordUpdate(@RequestParam("newPassword") String newPassword, ModelAndView modelAndView,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		Boolean flag = userService.ForgotPassword(newPassword, request, response);
+		if (flag) {
+			modelAndView.addObject("title", "Successful ForgotPassword");
+			modelAndView.addObject("message", "Password Updated successfully!");
+			modelAndView.addObject("url", "http://localhost:9090/login");
+			modelAndView.addObject("button", "to login");
+			modelAndView.addObject("details", "\"Congratulations! Your Password Forgot was successful.!");
+			modelAndView.setViewName("/html/coupon/response_success");
+		} else {
+			modelAndView.addObject("title", "Faild to update password ");
+			modelAndView.addObject("url", "http://localhost:9090/login");
+			modelAndView.addObject("button", "to login");
+			modelAndView.addObject("error", "New password matches a previous password.");
+			modelAndView.setViewName("/html/coupon/error");
+		}
 		return modelAndView;
 
 	}

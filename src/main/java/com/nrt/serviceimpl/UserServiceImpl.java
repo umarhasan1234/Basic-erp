@@ -32,6 +32,7 @@ import com.nrt.repository.UserRepository;
 import com.nrt.request.LoginRequest;
 import com.nrt.request.UserRequest;
 import com.nrt.responce.LoginResponce;
+import com.nrt.service.PasswordService;
 import com.nrt.service.UserService;
 import com.nrt.util.OTPGenerator;
 import com.nrt.util.RandomPasswordGeneratorWithPattern;
@@ -61,6 +62,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private EmailSender emailSender;
+
+	@Autowired
+	private PasswordService passwordService;
 
 	private static final String OTP_COOKIE_NAME = "OTP";
 
@@ -106,7 +110,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		catch (Exception e) {
-			e.printStackTrace();
+			return ResponseEntity.badRequest().body(null);
 		}
 		String token = null;
 		Optional<User> userOptional = java.util.Optional.empty();
@@ -116,10 +120,9 @@ public class UserServiceImpl implements UserService {
 			userOptional = userRepository.findByEmail(loginRequest.getUserId());
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			return ResponseEntity.badRequest().body(null);
 		}
-		return ResponseEntity.ok(new LoginResponce(token, userOptional.get().getRole().getRole(),
-				userOptional.get().getPasswordUpdated()));
+		return ResponseEntity.ok(new LoginResponce(token, userOptional.get().getRole().getRole()));
 	}
 
 	public ResponseEntity<User> getUserById(long id) {
@@ -128,12 +131,14 @@ public class UserServiceImpl implements UserService {
 		return new ResponseEntity<User>(user.get(), HttpStatus.OK);
 	}
 
-	public ResponseEntity<User> updatePassword(String oldPassword, String newPassword) {
+	public Boolean updatePassword(String oldPassword, String newPassword) {
 		Date date = Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
 		Optional<User> optionalUser = null;
+		UserDetails userDetails = null;
+		Boolean flag = Boolean.FALSE;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			userDetails = (UserDetails) authentication.getPrincipal();
 			optionalUser = userRepository.findByEmail(userDetails.getUsername());
 		}
 		if (optionalUser.isPresent()) {
@@ -141,25 +146,30 @@ public class UserServiceImpl implements UserService {
 			String currentPassword = user.getPassword();
 
 			if (passwordEncoder.matches(oldPassword, currentPassword)) {
-				user.setPasswordUpdated(date);
-				user.setPassword(passwordEncoder.encode(newPassword));
-				userRepository.save(user);
+				try {
+					flag = passwordService.changePassword(userDetails.getUsername(), newPassword);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
 				try {
 					Map<String, String> sourceMap = new HashMap<String, String>();
-					sourceMap.put("password", currentPassword);
+					sourceMap.put("password", newPassword);
 					sourceMap.put("username", user.getFirstName() + " " + user.getLastName());
 					emailSender.sendEmail(user.getEmail(), "Password Updated Successfully",
-							"/html/email/update-password-template");
+							"/html/email/update-password-template", sourceMap);
 				} catch (MessagingException e) {
 					e.printStackTrace();
 				}
 
-				return new ResponseEntity<>(user, HttpStatus.OK);
+				return flag;
+
 			} else {
-				return new ResponseEntity<>(user, HttpStatus.UNAUTHORIZED);
+				return flag;
 			}
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return flag;
 		}
 
 	}
@@ -189,10 +199,14 @@ public class UserServiceImpl implements UserService {
 			Map<String, String> sourceMap = new HashMap<String, String>();
 			String generateOTP = OTPGenerator.generateOTP(6);
 			sourceMap.put("username", userOption.get().getFirstName() + " " + userOption.get().getLastName());
-			Cookie tokenCookie = new Cookie("OTP", generateOTP);
-			tokenCookie.setMaxAge(24 * 60 * 60);
-			tokenCookie.setPath("/");
-			response.addCookie(tokenCookie);
+			Cookie otpCookie = new Cookie("OTP", generateOTP);
+			otpCookie.setMaxAge(24 * 60 * 60);
+			otpCookie.setPath("/");
+			response.addCookie(otpCookie);
+			Cookie emailCookie = new Cookie("email", email);
+			emailCookie.setMaxAge(24 * 60 * 60);
+			emailCookie.setPath("/");
+			response.addCookie(emailCookie);
 			sourceMap.put("OTP", generateOTP);
 			try {
 				emailSender.sendEmail(email, "FORGOT PASSWORD ", "/html/email/forgot-password-template", sourceMap);
@@ -206,14 +220,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Boolean OTPVelidation(Integer otp, HttpServletRequest request) {
+	public Boolean OTPVelidation(String otp, HttpServletRequest request) {
 		String OTP = null;
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
 				if (cookie.getName().equals(OTP_COOKIE_NAME)) {
 					OTP = cookie.getValue();
-					if (otp == Integer.parseInt(OTP))
+					if (otp.equals(OTP))
+
 						return Boolean.TRUE;
 
 					else
@@ -227,20 +242,37 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void ForgotPassword(String newPassword) {
+	public Boolean ForgotPassword(String newPassword, HttpServletRequest request, HttpServletResponse response) {
 		Date date = Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		UserRequest userRequest = new UserRequest();
-		if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-			Optional<User> userOption = userRepository.findByEmail(userDetails.getUsername());
-
-			if (userOption.isPresent()) {
-				User user = userOption.get();
-				user.setPasswordUpdated(date);
-				user.setPassword(passwordEncoder.encode(newPassword));
-				userRepository.save(user);
+		Cookie[] cookies = request.getCookies();
+		Boolean flag = Boolean.FALSE;
+		String email = null;
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("email")) {
+					email = cookie.getValue();
+					break;
+				}
 			}
 		}
+		if (email != null) {
+			Cookie tokenCookie = new Cookie("email", "");
+			tokenCookie.setMaxAge(0);
+			tokenCookie.setPath("/");
+			response.addCookie(tokenCookie);
+		}
+		Optional<User> userOption = userRepository.findByEmail(email);
+
+		if (userOption.isPresent()) {
+			User user = userOption.get();
+			user.setPasswordUpdated(date);
+			try {
+				flag = passwordService.changePassword(user.getEmail(), newPassword);
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
+		}
+		return flag;
 	}
 }

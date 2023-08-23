@@ -15,7 +15,7 @@ public interface UserService {
 
 	public ResponseEntity<User> getUserById(long userId);
 
-	public ResponseEntity<User> updatePassword(String oldPassword, String newPassword);
+	public Boolean updatePassword(String oldPassword, String newPassword);
 
 	public ResponseEntity<LoginResponce> generateToken(LoginRequest loginRequest);
 
@@ -23,8 +23,8 @@ public interface UserService {
 
 	public Boolean SendOTP(String email, HttpServletResponse response);
 
-	public Boolean OTPVelidation(Integer otp,HttpServletRequest request);
+	public Boolean OTPVelidation(String otp, HttpServletRequest request);
 
-	public void ForgotPassword(String newPassword);
+	public Boolean ForgotPassword(String newPassword, HttpServletRequest request, HttpServletResponse response);
 
 }
