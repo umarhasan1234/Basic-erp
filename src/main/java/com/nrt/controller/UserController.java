@@ -1,16 +1,11 @@
 package com.nrt.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.nrt.entity.User;
 import com.nrt.request.UpdateRequest;
 import com.nrt.request.UserRequest;
 import com.nrt.service.UserService;
@@ -50,9 +45,8 @@ public class UserController {
 
 	@PostMapping("/password/update")
 	public ModelAndView PasswordVerify(@ModelAttribute UpdateRequest updateRequest, ModelAndView modelAndView) {
-		ResponseEntity<User> updatePassword = userService.updatePassword(updateRequest.getOldPassword(),
-				updateRequest.getNewPassword());
-		if (updatePassword.getStatusCode().equals(HttpStatus.OK)) {
+		Boolean flag = userService.updatePassword(updateRequest.getOldPassword(), updateRequest.getNewPassword());
+		if (flag) {
 			modelAndView.addObject("title", "Successful password updated");
 			modelAndView.addObject("message", "Password Updated Successfully..");
 			modelAndView.addObject("url", "http://localhost:9090/profile");
@@ -63,7 +57,7 @@ public class UserController {
 			modelAndView.addObject("title", "Faild to update password ");
 			modelAndView.addObject("url", "http://localhost:9090/profile");
 			modelAndView.addObject("button", "to Profile");
-			modelAndView.addObject("error", "Please try again Faild to password update");
+			modelAndView.addObject("error", "New password matches a previous password.");
 			modelAndView.setViewName("/html/coupon/error");
 		}
 		return modelAndView;
