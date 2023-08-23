@@ -13,9 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.nrt.entity.Catagory;
 import com.nrt.entity.Product;
+import com.nrt.entity.SubCatagory;
 import com.nrt.request.CatagoryRequest;
 import com.nrt.request.ProductRequest;
 import com.nrt.service.CatagoryService;
+import com.nrt.service.SubCatagoryService;
 
 @Controller
 public class CatagoryController {
@@ -23,9 +25,15 @@ public class CatagoryController {
 	@Autowired
 	private CatagoryService catagoryService;
 	
+	@Autowired
+	private SubCatagoryService subCatagoryService;
+
+	
 	// Call for adding the catagory
 	@RequestMapping("/catagory")
 	public ModelAndView defaultMethod(ModelAndView modelAndView) {
+		List<SubCatagory> subCatagories=subCatagoryService.getAllSubCatagory();
+		modelAndView.addObject("subCatagories", subCatagories);
 		modelAndView.setViewName("/html/product/add_catagory");
 		return modelAndView;
 	}
@@ -39,10 +47,9 @@ public class CatagoryController {
 		            modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
 		            modelAndView.setViewName("/html/product/error_message");
 		        } else {
-		            modelAndView.addObject("title", "Save Catagory");
-		            modelAndView.addObject("message", "Successfully added");
-		            modelAndView.addObject("details", "Congratulations! New Type of Product added successfully!");
-		            modelAndView.setViewName("/html/product/response_message");
+		        	List<Catagory> catagories = catagoryService.getAllCatagory();
+					modelAndView.addObject("catagories", catagories);
+		            modelAndView.setViewName("/html/product/list_of_catagory");
 		        }
 		        return modelAndView;
 		    }

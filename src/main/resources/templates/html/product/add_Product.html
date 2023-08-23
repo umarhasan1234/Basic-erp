@@ -98,8 +98,19 @@
 					<label for="productFile">Product Image:</label>
 					<input type="file" id="productFile" name="file" accept=".jpg, .jpeg, .png" required><br>
 					<p>Please upload a .jpg or .png file only.</p><br>
-
-					<input type="submit" value="Add Product"><br>
+					
+					<label>Category:
+            			<select th:field="*{catagories}">
+                <option th:each="catagories : ${catagories}" th:value="${catagories}" th:text="${catagories.catagoryName}"></option>
+            </select>
+            
+            <label>Subcategory:
+            			<select th:field="*{subCatagories}">
+                <option th:each="subCatagories : ${subCatagories}" th:value="${subCatagories}" th:text="${subCatagories.subCatagoryName}"></option>
+            </select>
+        </label><br/>
+        
+						<input type="submit" value="Add Product"><br>
 
 					</br><a href="/listProduct">Go to Product List</a></br>
 					</br><a href="find_product_by_id">Find Product By Id</a></br>

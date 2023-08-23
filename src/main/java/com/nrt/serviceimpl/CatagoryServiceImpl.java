@@ -25,7 +25,6 @@ public class CatagoryServiceImpl implements CatagoryService{
 	public boolean saveCatagory(CatagoryRequest catagoryRequest) {
 		Catagory catagory=new Catagory();
 		catagory.setCatagoryId(catagoryRequest.getCatagoryId());
-		catagory.setCatagoryDescription(catagoryRequest.getCatagoryDescription());
 		catagory.setCatagoryName(catagoryRequest.getCatagoryName());
 		if (catagoryRepository.existsById(catagory.getCatagoryId())) {
             return false;

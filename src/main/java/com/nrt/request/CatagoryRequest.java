@@ -1,5 +1,9 @@
 package com.nrt.request;
 
+import java.util.List;
+
+import com.nrt.entity.SubCatagory;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +17,5 @@ public class CatagoryRequest {
 	
 	private long catagoryId;
 	private String catagoryName;
-	private String catagoryDescription;
-
+	private List<SubCatagory> subcategories;
 }

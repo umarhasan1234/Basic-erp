@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-	<title>Catagory List</title>
+	<title>Sub Catagory List</title>
 	<style>
 		table {
 			width: 100%;
@@ -37,7 +37,7 @@
 				<li><a href="http://localhost:9090/catagory">Add-Catagory</a></li>
 				<li><a href="http://localhost:9090/subCatagory">Add-Sub-Catagory</a></li>
 				<li><a href="http://localhost:9090/listProduct">Product-List</a></li>
-				<li><a href="http://localhost:9090/listSubCatagory">Sub-Catagory-List</a></li>
+				<li><a href="http://localhost:9090/listCatagory">Catagory-List</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="http://localhost:9090/profile"><span class="glyphicon glyphicon-user"></span>Profile</a>
@@ -48,26 +48,24 @@
 		</div>
 
 	</nav>
+    <h2>Subcategory List</h2>
 
-	<h1>List of Catagories</h1>
-
-
-	<table border>
-		<tr>
-			<th>Catagory Name</th>
-			<th>Update Catagory</th>
-			<th>Delete Catagory</th>
-		</tr>
-
-
-		<tr th:each="catagories : ${catagories}">
-			<td th:text="${catagories.catagoryName}"></td>
-			<td><a th:href="@{/updateByCatagoryId/(id=${catagories.catagoryId})}">update</a></td>
-			<td><a th:href="@{/deleteCatagory/(id=${catagories.catagoryId})}">delete</a></td>
-		</tr>
-	</table>
-
-	<br />
+    <table border>
+            <tr>
+                <th>Subcategory Name</th>
+                <th>Subcategory Description</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+            <tr th:each="subCatagories : ${subCatagories}">
+                <td th:text="${subCatagories.subCatagoryName}"></td>
+                <td th:text="${subCatagories.subCatagoryDescription}"></td>
+                <td><a th:href="@{/updateSubCatagoryById/(id=${subCatagories.subCatagoryId})}">Update</a>
+				<td><a th:href="@{/deleteSubCatagory/(id=${subCatagories.subCatagoryId})}">delete</a></td>
+                </td>
+                
+            </tr>
+    </table>
 
 </body>
 

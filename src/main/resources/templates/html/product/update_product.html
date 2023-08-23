@@ -36,8 +36,9 @@
 
 		<label for="quantity">Quantity:</label>
 		<input type="number" id="quantity" name="quantity" th:value="${product.quantity}" required /><br><br>
-
-		<label for="productFile">Product Image:</label>
+		
+		
+		<label for="productFile"><img th:src="@{'/images/' + ${product.imagePath}}" width="100" height="100" /></label>
 		<input type="file" id="productFile" name="file" th:value="${product.imagePath}" accept="image/*" required>
 		<p>please import .jpg file only</p><br>
 

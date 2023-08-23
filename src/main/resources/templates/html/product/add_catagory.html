@@ -82,9 +82,11 @@
 
 					<label for="name">Catagory Name:</label>
 					<input type="text" id="catagoryName" name="catagoryName" required><br>
-
-					<label for="description">Catagory Description:</label>
-					<textarea id="catagoryDescription" name="catagoryDescription" rows="4" cols="50" required></textarea><br>
+					
+					<label>Subcategory:
+            			<select th:field="*{subCatagories}">
+                <option th:each="subCatagories : ${subCatagories}" th:value="${subCatagories}" th:text="${subCatagories.subCatagoryName}"></option>
+            </select>
 						
 						<input type="submit" value="Add Catagory"><br>
 
