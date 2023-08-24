@@ -71,7 +71,8 @@ public class ProductServiceImpl implements ProductService {
 		product.setSellingPrice(productRequest.getSellingPrice());
 		product.setQuantity(productRequest.getQuantity());
 		product.setImagePath(file.getOriginalFilename());
-
+		
+//	
 //		SubCatagory subCategory=new SubCatagory();
 //		product.setSubCatagory(subCategory);
 //		
