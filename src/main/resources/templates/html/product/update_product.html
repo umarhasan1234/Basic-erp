@@ -20,7 +20,7 @@
 		<input type="text" id="name" name="name" th:value="${product.name}" required /><br><br>
 
 		<label for="description">Product Description:</label>
-		<input type="text" id="description" name="description" th:value="${product.description}" required /><br><br>
+		<input type="text" id="description" name="description" rows="4" cols="50" th:value="${product.description}" required /><br><br>
 
 		<label for="price">Purchase Price:</label>
 		<input type="number" id="purchasePrice" name="purchasePrice" th:value="${product.purchasePrice}" min="0"

@@ -1,6 +1,7 @@
 package com.nrt.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,11 +25,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
+@PreAuthorize("hasRole('PRODUCT')")
 public class ProductController {
 
 	@Autowired
@@ -45,7 +48,7 @@ public class ProductController {
 	public ModelAndView defaultMethod(ModelAndView modelAndView) {
 		List<Catagory> catagories = catagoryService.getAllCatagory();
 		modelAndView.addObject("catagories", catagories);
-		List<SubCatagory> subCatagories=subCatagoryService.getAllSubCatagory();
+		List<SubCatagory> subCatagories = subCatagoryService.getAllSubCatagory();
 		modelAndView.addObject("subCatagories", subCatagories);
 		System.out.println(catagories);
 		modelAndView.setViewName("/html/product/add_Product");
@@ -56,16 +59,15 @@ public class ProductController {
 	@RequestMapping("/saveProduct")
 	public ModelAndView addProduct(@ModelAttribute("productRequest") ProductRequest productRequest,
 			@RequestParam("file") MultipartFile file, ModelAndView modelAndView) {
-		// modelAndView.addObject("subCatagory",
-		// 
-		boolean b = productService.saveProduct(productRequest, file);// call sevice layer saveProduct method
+
+		boolean b = productService.saveProduct(productRequest, file);// call sevice layer
+		// saveProduct method
 		if (!b) {
 			modelAndView.addObject("errorMessage", "Product is already exists.");
 			modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
 			modelAndView.setViewName("/html/product/error_message");
 		} else {
 
-	
 			List<Product> products = productService.getAllProduct();
 			modelAndView.addObject("products", products);
 			modelAndView.setViewName("/html/product/list_product");
@@ -82,15 +84,27 @@ public class ProductController {
 		return modelAndView;
 	}
 
-	// this method find product by id
-	@GetMapping("/getProduct/")
-	public ModelAndView getProduct(@RequestParam("id") Long id, ModelAndView modelAndView) {
-		Product products = productService.GetProductById(id);
-
-		modelAndView.addObject("getProductById", products);
-		modelAndView.setViewName("/html/product/list_product");
+	@RequestMapping("/findProductById")
+	public ModelAndView findProductByProductId(ModelAndView modelAndView) {
+		modelAndView.setViewName("/html/product/find_product_by_id");
 		return modelAndView;
 	}
+	
+	// this method find product by id
+	@RequestMapping("/getProductById")
+	public ModelAndView getProduct(@RequestParam("id") Long id, ModelAndView modelAndView) {
+		System.out.println("getProductById call");
+		Optional<Product> productOptional = Optional.of(productService.GetProductById(id));
+		if(productOptional !=null) {
+            modelAndView.addObject("products", productOptional);
+    		modelAndView.setViewName("/html/product/show_product_by_id"); // Set the view name
+        } else {
+        	modelAndView.addObject("errorMessage", "Product is already exists.");
+			modelAndView.addObject("error", "An error occurred while processing your request. Please try again later.");
+			modelAndView.setViewName("/html/product/error_message");
+        }
+        return modelAndView;
+}
 
 	// this method delete product by id
 	@GetMapping("/deleteProduct/")
@@ -112,7 +126,7 @@ public class ProductController {
 		modelAndView.addObject("product", product);
 		modelAndView.setViewName("/html/product/update_product"); // View name without extension
 		return modelAndView;
-
+	
 	}
 
 //	//update product 

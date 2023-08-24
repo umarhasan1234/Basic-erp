@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-	<title>Catagory List</title>
+	<title>Product List</title>
 	<style>
 		table {
 			width: 100%;
@@ -33,9 +33,9 @@
 				<a class="navbar-brand" href="#">BASIC-ERP</a>
 			</div>
 			<ul class="nav navbar-nav">
-				<li><a href="http://localhost:9090/catagory">Add-Catagory</a></li>
-				<li><a href="http://localhost:9090/subCatagory">Add-Sub-Catagory</a></li>
-				<li><a href="http://localhost:9090/listSubCatagory">Sub-Catagory-List</a></li>
+				<li><a href="http://localhost:9090/product">Add-Product</a></li>
+				<li><a href="http://localhost:9090/findProductById">Find-By-ProductId</a></li>
+				<li><a href="/listProduct">Product-List</a></li></br>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="http://localhost:9090/profile"><span class="glyphicon glyphicon-user"></span>Profile</a>
@@ -46,29 +46,38 @@
 		</div>
 
 	</nav>
-
-	<h1>List of Catagories</h1>
-
-
-	<table border>
+	<h2>Product List</h2>
+	<table>
 		<tr>
-			<th>Catagory Id</th>
-			<th>Catagory Name</th>
-			<th>Update Catagory</th>
-			<th>Delete Catagory</th>
+			<th>Product Image</th>
+			<th>Product Description</th>
+			<th>Product Name</th>
+			<th>Purchase Price</th>
+			<th>Max Retail Price</th>
+			<th>Selling Pricee</th>
+			<th>Quantity</th>
+			<th>Update Product</th>
+			<th>Delete Product</th>
 		</tr>
-    
-  
-    <tr th:each="catagories : ${catagories}">
-        <td th:text="${catagories.catagoryId}"></td>
-        <td th:text="${catagories.catagoryName}" </td>
-		<td><a th:href="@{/updateByCatagoryId/(id=${catagories.catagoryId})}">update</a></td>
-        <td><a th:href="@{/deleteCatagory/(id=${catagories.catagoryId})}">delete</a></td>
-    </tr>
-</table>
+
+
+		<tr th:each="product : ${products}">
+			<td><img th:src="@{'/images/' + ${product.imagePath}}" width="100" height="100" /></td>
+			<td th:text="${product.description}"></td>
+			<td th:text="${product.name}"></td>
+			<td th:text="${product.purchasePrice}"></td>
+			<td th:text="${product.maxRetailPrice}"></td>
+			<td th:text="${product.sellingPrice}"></td>
+			<td th:text="${product.quantity}"></td>
+			<td><a th:href="@{/updateProductById/(id=${product.id})}">update</a></td>
+			<td><a th:href="@{/deleteProduct/(id=${product.id})}">delete</a></td>
+		</tr>
 
 
 
+	</table>
+
+	</br>
 </body>
 
 </html>

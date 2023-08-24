@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -21,19 +22,18 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name="catagory")
+@Table(name = "catagory")
 public class Catagory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="catagory_id")
+	@Column(name = "catagory_id")
 	private long catagoryId;
-	
-	@Column(name="catagory_name")
-	private String catagoryName;
-	
 
-	
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<SubCatagory> subcategories = new ArrayList<>();
+	@Column(name = "catagory_name")
+	private String catagoryName;
+
+	@JoinColumn(name = "catagory_id")
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<SubCatagory> subcategories = new ArrayList<>();
 
 }

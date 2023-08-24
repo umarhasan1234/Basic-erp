@@ -14,8 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
@@ -35,7 +33,12 @@ public class SecurityConfig {
 		final String PUBLIC_URL[] = { "/login/**", "/user/**", "/images/**", "/forgot/**" };
 		http.csrf(csrf -> csrf.disable());
 		http.authorizeHttpRequests(
-				(requests) -> requests.requestMatchers(PUBLIC_URL).permitAll().anyRequest().authenticated());
+				(requests) -> requests.requestMatchers(PUBLIC_URL).permitAll().anyRequest().authenticated())
+				.formLogin((formLogin) -> formLogin.loginPage("/login").permitAll())
+				.logout((logout) -> logout.logoutUrl("/logout").logoutSuccessUrl("/login").invalidateHttpSession(true)
+						.deleteCookies("JSESSIONID", "jwtToken"));
+
+		;
 		http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -19,8 +19,9 @@ public class CustomUserService implements UserDetailsService {
 	public CustomUserDetails loadUserByUsername(String username) {
 
 		Optional<User> userOptional = userRepository.findByEmail(username);
-
+      if(userOptional.isPresent())
 		return new CustomUserDetails(userOptional.get());
+      return null;
 	}
 
 }

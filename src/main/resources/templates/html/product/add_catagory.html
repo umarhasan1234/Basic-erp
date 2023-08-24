@@ -62,14 +62,11 @@
 	</style>
 	<meta name="description" content="" />
 
-
 	<div id="apiResponse"></div>
 	<script>
 		console.log(localStorage.getItem('userToken'));
 	</script>
 	
-	
-
 </head>
 
 <body>
@@ -86,21 +83,13 @@
 					<label>Subcategory:
             			<select th:field="*{subCatagories}">
                 <option th:each="subCatagories : ${subCatagories}" th:value="${subCatagories}" th:text="${subCatagories.subCatagoryName}"></option>
-            </select>
-						
-
-
+            			</select>
 					<label for="description">Catagory Description:</label>
 					<textarea id="catagoryDescription" name="catagoryDescription" rows="4" cols="50" required></textarea><br>
 						
 						<input type="submit" value="Add Catagory"><br>
 
-					</br><a href="/listProduct">Product List</a></br>
-					</br><a href="/catagory">Catagory</a></br>
-					</br><a href="find_product_by_id.html">Find Product By Id</a></br>
 				</form>
-
-
 			</div>
 		</div>
 	</div>

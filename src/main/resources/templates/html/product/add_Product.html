@@ -74,47 +74,46 @@
 		<div class="authentication-inner row">
 			<div class="d-flex col-lg-8 align-items-center justify-content-center p-sm-5 p-3">
 
-				<form id="couponForm" method="post" action="/saveProduct" enctype="multipart/form-data">
+				<form id="productForm" method="post" action="/saveProduct" enctype="multipart/form-data">
 					<h2>Add Product</h2>
-					
+
 					<label for="name">Product Name:</label>
 					<input type="text" id="name" name="name" required><br>
 
 					<label for="description">Product Description:</label>
 					<textarea id="description" name="description" rows="4" cols="50" required></textarea><br>
 
-					<label for="price">Purchase Price:</label>
+					<label for="purchasePrice">Purchase Price:</label>
 					<input type="number" id="purchasePrice" name="purchasePrice" step="0.01" min="0" required><br>
 
-					<label for="price">Max Retail Price:</label>
+					<label for="maxRetailPrice">Max Retail Price:</label>
 					<input type="number" id="maxRetailPrice" name="maxRetailPrice" step="0.01" min="0" required><br>
 
-					<label for="price">Selling Price:</label>
+					<label for="sellingPrice">Selling Price:</label>
 					<input type="number" id="sellingPrice" name="sellingPrice" step="0.01" min="0" required><br>
 
-					<label for="price">Quantity:</label>
+					<label for="quantity">Quantity:</label>
 					<input type="number" id="quantity" name="quantity" min="0" required><br>
 
 					<label for="productFile">Product Image:</label>
 					<input type="file" id="productFile" name="file" accept=".jpg, .jpeg, .png" required><br>
 					<p>Please upload a .jpg or .png file only.</p><br>
-					
-					<label>Category:
-            			<select th:field="*{catagories}">
-                <option th:each="catagories : ${catagories}" th:value="${catagories}" th:text="${catagories.catagoryName}"></option>
-            </select>
-            
-            <label>Subcategory:
-            			<select th:field="*{subCatagories}">
-                <option th:each="subCatagories : ${subCatagories}" th:value="${subCatagories}" th:text="${subCatagories.subCatagoryName}"></option>
-            </select>
-        </label><br/>
-        
-						<input type="submit" value="Add Product"><br>
 
-					</br><a href="/listProduct">Go to Product List</a></br>
+					<label>Category:</label>
+					<select name="categoryId">
+						<option th:each="category : ${catagories}" th:value="${category.catagoryId}"
+							th:text="${category.catagoryName}"></option>
+					</select>
+
+					<label>Subcategory:</label>
+					<select name="subCategoryId">
+						<option th:each="subcategory : ${subCatagories}" th:value="${subcategory.subCatagoryId}"
+							th:text="${subcategory.subCatagoryName}"></option>
+					</select>
+
+					<input type="submit" value="Add Product"><br>
+
 				</form>
-
 
 			</div>
 		</div>
