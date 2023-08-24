@@ -2,7 +2,6 @@ package com.nrt.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,10 +33,11 @@ public class LoginController {
 		ResponseEntity<LoginResponce> loginResponseEntity = userService.generateToken(loginRequest);
 		LoginResponce loginResponse = loginResponseEntity.getBody();
 		if (loginResponse != null) {
-			Cookie tokenCookie = new Cookie("jwtToken", loginResponse.getUserToken());
+			Cookie tokenCookie = new Cookie(JWT_COOKIE_NAME, loginResponse.getUserToken());
 			tokenCookie.setMaxAge(24 * 60 * 60);
 			tokenCookie.setPath("/");
 			response.addCookie(tokenCookie);
+			System.out.println(loginResponse.getUserLogin());
 		}
 
 		return loginResponseEntity;
@@ -48,29 +48,6 @@ public class LoginController {
 		modelAndView.setViewName("/html/login/login");
 		return modelAndView;
 
-	}
-
-	@GetMapping("/logout")
-	public String logout(HttpServletRequest request, HttpServletResponse response) {
-		String jwtToken = null;
-		Cookie[] cookies = request.getCookies();
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals(JWT_COOKIE_NAME)) {
-					jwtToken = cookie.getValue();
-					break;
-				}
-			}
-		}
-
-		if (jwtToken != null) {
-			Cookie tokenCookie = new Cookie(JWT_COOKIE_NAME, "");
-			tokenCookie.setMaxAge(0);
-			tokenCookie.setPath("/");
-			response.addCookie(tokenCookie);
-		}
-
-		return "redirect:/login"; // Redirect to the login page, change URL as needed
 	}
 
 	@GetMapping("/forgot/password")

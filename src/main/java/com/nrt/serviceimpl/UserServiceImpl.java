@@ -114,8 +114,8 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(null);
 		}
-		Date date = Date.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
-		return ResponseEntity.ok(new LoginResponce(token, date));
+
+		return ResponseEntity.ok(new LoginResponce(token, userOptional.get().getPasswordUpdated()));
 	}
 
 	public ResponseEntity<User> getUserById(long id) {
